@@ -1,0 +1,146 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "palette": {
+    "blue": "#7FB4CA",
+    "cyan": "#A3D4D5",
+    "darkgrey": "#363646",
+    "git-ahead": "#a48ec7",
+    "git-ahead-behind": "#e6c384",
+    "git-behind": "#d8616b",
+    "git-work-stage-changed": "#7FB4CA",
+    "green": "#98bb6c",
+    "grey": "#4c4c55",
+    "purple": "#a48ec7",
+    "red": "#d8616b",
+    "white": "#DCD7BA",
+    "yellow": "#e6c384"
+  },
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "leading_diamond": "\ue0b6",
+          "template": "{{.Icon}}",
+          "foreground": "p:darkgrey",
+          "background": "p:red",
+          "type": "os",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "folder_icon": "..",
+            "home_icon": "~",
+            "max_depth": 2,
+            "style": "agnoster_short"
+          },
+          "template": " \ue5ff {{ .Path }}",
+          "foreground": "p:darkgrey",
+          "powerline_symbol": "\ue0b4",
+          "background": "p:yellow",
+          "type": "path",
+          "style": "powerline"
+        },
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": " \ue235 {{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }}{{ end }}{{ end }}",
+          "foreground": "p:darkgrey",
+          "powerline_symbol": "\ue0b4",
+          "background": "p:blue",
+          "type": "python",
+          "style": "powerline"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "fetch_stash_count": true,
+            "fetch_status": true,
+            "fetch_upstream_icon": true
+          },
+          "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{ if gt .StashCount 0 }} \uf692{{ .StashCount }}{{ end }} ",
+          "foreground": "p:green",
+          "powerline_symbol": "\ue0b4",
+          "background": "transparent",
+          "type": "git",
+          "style": "powerline",
+          "foreground_templates": [
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}p:git-work-stage-changed{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}p:git-ahead-behind{{ end }}",
+            "{{ if gt .Ahead 0 }}p:git-ahead{{ end }}",
+            "{{ if gt .Behind 0 }}p:git-behind{{ end }}"
+          ]
+        },
+        {
+          "properties": {
+            "always_enabled": true,
+            "cache_duration": "none",
+            "style": "round"
+          },
+          "template": " {{ .FormattedMs }} ",
+          "foreground": "p:white",
+          "powerline_symbol": "\ue0b4",
+          "background": "transparent",
+          "type": "executiontime",
+          "style": "plain"
+        },
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": " Exit {{ .Code }}",
+          "foreground": "p:green",
+          "type": "exit",
+          "style": "plain",
+          "foreground_templates": [
+            "{{ if gt .Code 0 }}#E06C75{{ end }}"
+          ]
+        }
+      ],
+      "newline": true
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "template": "!",
+          "foreground": "p:red",
+          "type": "root",
+          "style": "plain"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "mapped_shell_names": {
+              "bash": "$",
+              "cmd": ">",
+              "fish": "~>",
+              "lua": ">",
+              "nu": ":)",
+              "pwsh": "❯",
+              "shell": "❯",
+              "zsh": "%"
+            }
+          },
+          "template": "{{ .Name }}",
+          "foreground": "p:blue",
+          "type": "shell",
+          "style": "plain"
+        }
+      ],
+      "newline": true
+    }
+  ],
+  "version": 3,
+  "final_space": true
+}
