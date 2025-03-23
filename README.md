@@ -7,7 +7,7 @@ Unix-shell
 
 ```bash
 mkdir -p ~/project/personal/
-cd ~/project/peronsl/
+cd ~/project/personal/
 git clone git@github.com:teoshibin/all_dotfiles.git
 ```
 
@@ -15,7 +15,7 @@ Powershell
 
 ```pwsh
 New-Item -ItemType Directory -Path $env:USERPROFILE/project/personal -Force
-cd ~/project/peronsl/
+cd ~/project/personal/
 git clone git@github.com:teoshibin/all_dotfiles.git
 ```
 
