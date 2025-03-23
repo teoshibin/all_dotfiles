@@ -7,7 +7,6 @@ Unix-shell
 mkdir -p ~/project/personal/
 cd ~/project/peronsl/
 git clone git@github.com:teoshibin/all_dotfiles.git
-
 ```
 
 Powershell
@@ -21,13 +20,18 @@ git clone git@github.com:teoshibin/all_dotfiles.git
 ## Windows
 
 - glazewm `~/`
+
+```pwsh
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr" -Target "$env:USERPROFILE\project\personal\all_dotfiles\glazewm\.glzr"
+```
+
 - idea `-`
 - powershell `~/Documents/PowerShell/`
 
 ```pwsh
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1" -Target "C:\Users\teosh\project\personal\all_dotfiles\powershell\Microsoft.PowerShell_profile.ps1"
-
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1" -Target "$env:USERPROFILE\project\personal\all_dotfiles\powershell\Microsoft.PowerShell_profile.ps1"
 ```
+
 - wezterm `~/.config/`
 
 ```pwsh
@@ -35,7 +39,15 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.config\wezterm" -Target
 ```
 
 - nvchad `~/AppData/Local/`
+```pwsh
+New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvch" -Target "$env:USERPROFILE\project\personal\all_dotfiles\neovim\nvch"
+```
+
 - ohmyposh `~/`
+
+```pwsh
+New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\neeon.omp.json" -Target "$env:USERPROFILE\project\personal\all_dotfiles\ohmyposh\neeon.omp.json"
+```
 
 ## Mac
 
