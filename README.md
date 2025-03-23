@@ -25,7 +25,6 @@ git clone git@github.com:teoshibin/all_dotfiles.git
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr" -Target "$env:USERPROFILE\project\personal\all_dotfiles\glazewm\.glzr"
 ```
 
-- idea `-`
 - powershell `~/Documents/PowerShell/`
 
 ```pwsh
@@ -39,6 +38,7 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.config\wezterm" -Target
 ```
 
 - nvchad `~/AppData/Local/`
+
 ```pwsh
 New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvch" -Target "$env:USERPROFILE\project\personal\all_dotfiles\neovim\nvch"
 ```
@@ -49,9 +49,10 @@ New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvch" -Target "$env:USE
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\neeon.omp.json" -Target "$env:USERPROFILE\project\personal\all_dotfiles\ohmyposh\neeon.omp.json"
 ```
 
+- idea `-`
+
 ## Mac
 
-- idea `-`
 - wezterm `~/.config/`
 
 ```bash
@@ -59,7 +60,13 @@ ln -s ~/.config/wezterm ~/project/personal/wezterm
 ```
 
 - nvchad `~/.config/`
+
+```bash
+ln -s ~/.config/nvch ~/project/personal/neovim/nvch
+```
+
 - fish `~/.config/`
+- idea `-`
 
 ## Linux
 
@@ -70,4 +77,9 @@ ln -s ~/.config/wezterm ~/project/personal/wezterm
 ```
 
 - nvchad `~/.config/`
+
+```bash
+ln -s ~/.config/nvch ~/project/personal/neovim/nvch
+```
+
 - fish `~/.config/`
