@@ -1,7 +1,7 @@
 
 # Dotfiles
 
-Why not dotfiles manager you ask? I don't see a point automating them, just keep it simple, I symlink it when I need it.
+I don't see a point automating them, I want to keep it simple, symlink it when I need it.
 
 Unix-shell
 
