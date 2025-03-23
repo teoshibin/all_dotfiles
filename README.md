@@ -1,6 +1,8 @@
 
 # Dotfiles
 
+Why not dotfiles manager you ask? I don't see a point automating them, just keep it simple, I symlink it when I need it.
+
 Unix-shell
 
 ```bash
@@ -37,7 +39,7 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\Documents\PowerShell\Mic
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.config\wezterm" -Target "$env:USERPROFILE\project\personal\all_dotfiles\wezterm"
 ```
 
-- nvchad `~/AppData/Local/`
+- [nvchad](/neovim/nvch/) `~/AppData/Local/`
 
 ```pwsh
 New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvch" -Target "$env:USERPROFILE\project\personal\all_dotfiles\neovim\nvch"
@@ -59,7 +61,7 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\neeon.omp.json" -Target 
 ln -s ~/.config/wezterm ~/project/personal/wezterm
 ```
 
-- nvchad `~/.config/`
+- [nvchad](/neovim/nvch/) `~/.config/`
 
 ```bash
 ln -s ~/.config/nvch ~/project/personal/neovim/nvch
@@ -76,7 +78,7 @@ ln -s ~/.config/nvch ~/project/personal/neovim/nvch
 ln -s ~/.config/wezterm ~/project/personal/wezterm
 ```
 
-- nvchad `~/.config/`
+- [nvchad](/neovim/nvch/) `~/.config/`
 
 ```bash
 ln -s ~/.config/nvch ~/project/personal/neovim/nvch
