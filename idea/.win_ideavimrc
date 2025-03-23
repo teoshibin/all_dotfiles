@@ -188,6 +188,7 @@ map <leader>: <Action>(SplitHorizontally)
 
 " Run
 nmap \r <Action>(Run)
+nmap <leader>\r <Action>(RunClass)
 " Continue Debug
 nmap \R <Action>(Resume)
 " Run Debug
@@ -220,4 +221,3 @@ nmap ]c <Action>(VcsShowNextChangeMarker)
 
 " Show Conflicts
 nmap \g <Action>(Git.ResolveConflicts)
-
