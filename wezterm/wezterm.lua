@@ -13,7 +13,7 @@ config.font = wezterm.font_with_fallback {
   'Consolas',
   'monospace'
 }
-config.font_size = 12
+config.font_size = 12.25
 config.line_height = 0.9
 
 -- Theme
