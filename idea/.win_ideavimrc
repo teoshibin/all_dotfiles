@@ -1,0 +1,223 @@
+
+" Actions: https://jb.gg/abva4t
+" Examples: https://jb.gg/share-ideavimrc
+" Plugins: https://github.com/JetBrains/ideavim/wiki/IdeaVim-Plugins
+" Options: https://raw.githubusercontent.com/wiki/JetBrains/ideavim/set-commands.md
+" Reference: https://github.com/cufarvid/lazy-idea/blob/fb4aea24f6dcf571c60a35e560d9b59aaaea659b/.ideavimrc
+
+" === VIM ===
+
+let mapleader=" "
+nmap <leader>\\\\ <Action>(IdeaVim.ReloadVimRc.reload)
+
+" Surround Plugin
+set surround
+" Commenting Plugin
+Plug 'tpope/vim-commentary'
+" Highlight Yanked Text
+Plug 'machakann/vim-highlightedyank'
+" Mark as Bookmark
+set ideamarks
+" TODO idk
+set idearefactormode=keep
+" Language Aware Join Line
+set ideajoin
+" Which Key
+set which-key
+
+" TODO idk
+set visualbell
+" Disable Bell Sound
+set noerrorbells
+" Share Clipboard
+set clipboard^=unnamedplus,unnamed
+" Highlight Search
+set hlsearch
+" Text Search Case-Insensitive
+set ignorecase
+" TODO idk
+set incsearch
+" Show Line Number
+set number
+" Show Relative Line Number
+set relativenumber
+" TODO idk
+set scroll
+" Scroll Margin Lines
+set scrolloff=6
+" Show Mode Status Line
+set showmode
+" TODO idk
+set smartcase
+" TODO idk
+set visualbell
+" TODO idk
+set wrapscan
+
+" === IDEA ===
+
+nmap <leader>` <Action>(WelcomeScreen.Settings)
+nmap <leader>l <Action>(WelcomeScreen.Settings)
+
+" === File Manager ===
+
+" File Manager Plugin
+set NERDTree
+":NERDTree
+":NERDTreeFocus
+":NERDTreeToggle
+":NERDTreeClose
+":NERDTreeFind
+":NERDTreeRefreshRoot
+" Toggle File Manager
+nmap <leader>n :NERDTreeToggle<CR>
+
+" === LSP ===
+
+" Find Usage / Go Declaration / Go Implementation
+nap gd <Action>(GotoDeclaration)zz
+" Go Declaration (interface / prototype)
+nmap gD <Action>(GotoTypeDeclaration)zz
+" Go Implementation (Concrete class)
+nmap gi <Action>(GotoImplementation)zz
+" Go Super (Super class)
+nmap gI <Action>(GotoSuperMethod)zz
+" Find Usage
+nmap gr <Action>(FindUsages)
+
+" Show Structure
+nmap <leader>ea <Action>(ActivateStructureToolWindow)
+" Show Error List
+nmap <leader>ee <Action>(ActivateProblemsViewToolWindow)
+" Show Error Description
+nmap <leader>E <Action>(ShowErrorDescription)
+" Jump Error
+nmap ]e <Action>(GotoNextError)zz
+nmap [e <Action>(GotoPreviousError)zz
+
+" Variable Rename
+nmap <leader>r <Action>(RenameElement)
+vmap <leader>r <Action>(RenameElement)
+
+" Format File
+nmap <leader>fm <Action>(ReformatCode)
+" Format Lines
+vmap <leader>fm <Action>(ReformatCode)
+
+" === Editing ===
+
+" Escape
+inoremap jj <Esc>
+inoremap jk <Esc>
+
+" Hide Highlights
+nnoremap <esc> <esc>:nohl<CR>
+
+" Repeat Macro
+nnoremap <leader>. @@
+
+" Paste On Top
+vnoremap p pgvy
+
+" Forward Backward Jump
+nmap <C-o> <Action>(Back)
+nmap <C-i> <Action>(Forward)
+
+" Show Marks
+nnoremap <leader>m :marks<Cr>
+" Delete marks
+nnoremap <leader>dm :delmarks a-zA-Z0-9<Cr>
+
+" Move Lines
+nmap <A-j> <Action>(MoveLineDown)
+nmap <A-k> <Action>(MoveLineUp)
+vmap <A-j> <Action>(MoveLineDown)
+vmap <A-k> <Action>(MoveLineUp)
+
+" Normal Mode New Line
+nnoremap <leader>o o<Esc>0"_D
+nnoremap <leader>O O<Esc>0"_D
+
+" Visual Line Indent
+vnoremap > >gv
+vnoremap < <gv
+
+" Center Half Page Jump
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+
+" Center Find
+nnoremap n nzz
+nnoremap N Nzz
+
+" Center Function Jump
+nnoremap [m [mzz
+nnoremap ]m ]mzz
+
+" === Window / Tab Management ===
+
+" Switch Tabs
+nmap <S-h> <Action>(PreviousTab)
+nmap <S-l> <Action>(NextTab)
+
+" Close Tabs
+nnoremap <leader>x :bd<Cr>
+" Close Other Tabs
+nmap <leader>X <Action>(CloseAllEditorsButActive)
+
+" Switch Pane / Tab Group
+nmap <C-h> <C-w>h
+nmap <C-j> <C-w>j
+nmap <C-k> <C-w>k
+nmap <C-l> <C-w>l
+
+" Increase Window Height
+nmap <C-Up> <Action>(IncrementWindowHeight)
+" Decrease Window Height
+nmap <C-Down> <Action>(DecrementWindowHeight)
+" Decrease Window Width
+nmap <C-Left> <Action>(DecrementWindowWidth)
+" Increase Window Width
+nmap <C-Right> <Action>(IncrementWindowWidth)
+
+" Split Tab
+map <leader>; <Action>(SplitVertically)
+map <leader>: <Action>(SplitHorizontally)
+
+" === Run / Debug / Task / Test ===
+
+" Run
+nmap \r <Action>(Run)
+" Continue Debug
+nmap \R <Action>(Resume)
+" Run Debug
+nmap \d <Action>(Debug)
+" Stop Debug
+nmap \s <Action>(Stop)
+" Toggle Breakpoint
+nmap \b <Action>(ToggleLineBreakpoint)
+
+" === Search ===
+
+" Search Files
+nmap <leader>sf <Action>(GotoFile)
+" Search All
+nmap <leader>sa <Action>(FindInPath)
+" Search Buffer
+nmap <leader>sb <Action>(Switcher)
+" Search Action
+nmap <leader>sk <Action>(GotoAction)
+" Search Classes
+nmap <leader>sr <Action>(GotoClass)
+" Search Symbols
+nmap <leader>ss <Action>(GotoSymbol)
+
+" === Version Control ===
+
+" Jump Changed Hunk
+nmap [c <Action>(VcsShowPrevChangeMarker)
+nmap ]c <Action>(VcsShowNextChangeMarker)
+
+" Show Conflicts
+nmap \g <Action>(Git.ResolveConflicts)
+
