@@ -58,13 +58,13 @@ New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\neeon.omp.json" -Target 
 - wezterm `~/.config/`
 
 ```bash
-ln -s ~/.config/wezterm ~/project/personal/wezterm
+ln -s ~/project/personal/wezterm ~/.config/wezterm
 ```
 
 - [nvchad](/neovim/nvch/) `~/.config/`
 
 ```bash
-ln -s ~/.config/nvch ~/project/personal/neovim/nvch
+ln -s ~/project/personal/neovim/nvch ~/.config/nvch
 ```
 
 - fish `~/.config/`
@@ -75,13 +75,13 @@ ln -s ~/.config/nvch ~/project/personal/neovim/nvch
 - wezterm `~/.config/`
 
 ```bash
-ln -s ~/.config/wezterm ~/project/personal/wezterm
+ln -s ~/project/personal/wezterm ~/.config/wezterm
 ```
 
 - [nvchad](/neovim/nvch/) `~/.config/`
 
 ```bash
-ln -s ~/.config/nvch ~/project/personal/neovim/nvch
+ln -s  ~/project/personal/neovim/nvch ~/.config/nvch
 ```
 
 - fish `~/.config/`
