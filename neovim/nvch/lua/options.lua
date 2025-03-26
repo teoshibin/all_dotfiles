@@ -81,6 +81,11 @@ opt.jumpoptions = "view"
 -- Max char line (not transparent)
 opt.colorcolumn = { 120 }
 
+-- vim dianostics
+vim.diagnostic.config({
+    virtual_lines = true
+})
+
 -- Change terminal shell, See :h shell-powershell
 if require("custom.os").isWindows() then
     -- local shell = vim.fn.executable("pwsh") == 1 and "pwsh -nol" or "powershell -nol"
