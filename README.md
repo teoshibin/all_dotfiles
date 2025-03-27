@@ -51,6 +51,15 @@ New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvch" -Target "$env:USE
 New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\neeon.omp.json" -Target "$env:USERPROFILE\project\personal\all_dotfiles\ohmyposh\neeon.omp.json"
 ```
 
+- kanata & kanata-gui
+
+Create a shortcut with flag `-c` for config path and `-q` for quiet no logging.
+
+```
+"<kanata-gui>" -q -c "<config>"
+
+```
+
 - idea `-`
 
 ## Mac
