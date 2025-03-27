@@ -82,9 +82,9 @@ opt.jumpoptions = "view"
 opt.colorcolumn = { 120 }
 
 -- vim dianostics
-vim.diagnostic.config({
-    virtual_lines = true
-})
+-- vim.diagnostic.config({
+--     virtual_lines = true
+-- })
 
 -- Change terminal shell, See :h shell-powershell
 if require("custom.os").isWindows() then
