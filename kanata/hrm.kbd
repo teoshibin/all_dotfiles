@@ -11,11 +11,12 @@
 
 ;; variables
 (defvar
-    tap-time 200
+    tap-time 300
     hold-time 200
 )
 
 ;; mappings alias
+;; (tap-hold $tap-timeout $hold-timeout $tap-action $hold-action)
 (defalias
     a-mod (tap-hold $tap-time $hold-time a lmet)
     s-mod (tap-hold $tap-time $hold-time s lalt)
