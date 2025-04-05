@@ -1,96 +1,38 @@
 
 # Dotfiles
 
-I don't see a point automating them, I want to keep it simple, symlink it when I need it.
+## Unix
 
-Unix-shell
-
-```bash
-mkdir -p ~/project/personal/
-cd ~/project/personal/
-git clone git@github.com:teoshibin/all_dotfiles.git
+```sh
+ln -s <source> <destination>
 ```
 
-Powershell
+## Powershell
 
-```pwsh
-New-Item -ItemType Directory -Path $env:USERPROFILE/project/personal -Force
-cd ~/project/personal/
-git clone git@github.com:teoshibin/all_dotfiles.git
+```powershell
+New-Item -ItemType SymbolicLink -Path <destination> -Target <source> 
 ```
 
-## Windows
+## dotfiles
 
-- glazewm `~/`
-
-```pwsh
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.glzr" -Target "$env:USERPROFILE\project\personal\all_dotfiles\glazewm\.glzr"
-```
-
-- powershell `~/Documents/PowerShell/`
-
-```pwsh
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1" -Target "$env:USERPROFILE\project\personal\all_dotfiles\powershell\Microsoft.PowerShell_profile.ps1"
-```
-
-- wezterm `~/.config/`
-
-```pwsh
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\.config\wezterm" -Target "$env:USERPROFILE\project\personal\all_dotfiles\wezterm"
-```
-
-- [nvchad](/neovim/nvch/) `~/AppData/Local/`
-
-```pwsh
-New-Item -ItemType SymbolicLink -Path "$env:LOCALAPPDATA\nvch" -Target "$env:USERPROFILE\project\personal\all_dotfiles\neovim\nvch"
-```
-
-- ohmyposh `~/`
-
-```pwsh
-New-Item -ItemType SymbolicLink -Path "$env:USERPROFILE\neeon.omp.json" -Target "$env:USERPROFILE\project\personal\all_dotfiles\ohmyposh\neeon.omp.json"
-```
-
+- glazewm `~/.gzlr`
+- ohmyposh `~/neeon.omp.json`
+- powershell `~/Documents/PowerShell/Microsoft.PowerShell_profile.ps1`
 - kanata & kanata-gui
 
 Create a shortcut with flag `-c` for config path and `-q` for quiet no logging.
 
-```
+```txt
 "<kanata-gui>" -q -c "<config>"
-
 ```
 
-- idea `-`
+- [neovim nvch](/neovim/nvch/)
+    - windows `~/AppData/Local/`
+    - unix `~/.config/nvch`
+- idea `~/.ideavimrc`
+- wezterm `~/.config/wezterm`
 
-## Mac
+- fish `~/.config/fish/config.fish`
+- bash `~/.bash_profile`
+- ghostty `~/.config/ghostty/config`
 
-- wezterm `~/.config/`
-
-```bash
-ln -s ~/project/personal/wezterm ~/.config/wezterm
-```
-
-- [nvchad](/neovim/nvch/) `~/.config/`
-
-```bash
-ln -s ~/project/personal/neovim/nvch ~/.config/nvch
-```
-
-- fish `~/.config/`
-- idea `-`
-
-## Linux
-
-- wezterm `~/.config/`
-
-```bash
-ln -s ~/project/personal/wezterm ~/.config/wezterm
-```
-
-- [nvchad](/neovim/nvch/) `~/.config/`
-
-```bash
-ln -s  ~/project/personal/neovim/nvch ~/.config/nvch
-```
-
-- fish `~/.config/`
