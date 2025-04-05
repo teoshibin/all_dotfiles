@@ -1,0 +1,142 @@
+
+" Basic settings
+set showcmd
+set number relativenumber
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+set clipboard=unnamed
+set visualbell
+set scrolloff=8
+
+" leader
+let mapleader=" "
+
+" vimrc
+nnoremap <leader>\ :source ~/.vsvimrc<CR>
+
+
+" Escape
+inoremap jj <Esc>
+
+" Search
+nnoremap <leader>n :nohl<CR>
+
+" Macro
+nnoremap Q @@
+
+" Paste on top
+vnoremap p pgvy
+
+" Copy Paste
+nnoremap <leader>p "ap
+nnoremap <leader>y "ay
+vnoremap <leader>p "ap
+vnoremap <leader>y "ay
+
+" Reselect pasted
+nnoremap gp `[V`]
+nnoremap gP `[v`]
+
+" Cut or delete
+nnoremap <leader>c "ac 
+vnoremap <leader>c "ac 
+vnoremap <leader>d "ad
+nnoremap <leader>d "ad
+
+" New Line
+nnoremap <leader>o o<Esc>0"_D
+nnoremap <leader>O O<Esc>0"_D
+nnoremap K a<CR><Esc>kg_
+
+" Center Jump
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+
+" Center Find
+nnoremap n nzz
+nnoremap N Nzz
+
+" Indent
+vnoremap > >gv
+vnoremap < <gv
+
+" Quick launch
+nnoremap <leader>q :vsc Window.QuickLaunch<CR>
+
+" Refactor
+nnoremap R :vsc Refactor.Rename<CR>
+
+" Formatting
+vnoremap <leader>l Edit.FormatSelection<CR> 
+
+" Commenting
+" xnoremap gc :vsc Edit.CommentSelection<cr>
+" nnoremap gcc V:vsc Edit.CommentSelection<cr>
+nnoremap gcc :vsc Edit.ToggleLineComment<CR>:normal <Esc><CR>
+vnoremap gc :vsc Edit.ToggleLineComment<CR>:normal <Esc><CR>
+
+" Documentation
+nnoremap <leader>h :vsc Edit.QuickInfo<CR>
+nnoremap gt :vsc Edit.GotoType<CR>
+nnoremap gd :vsc Edit.GotoDefinition<CR>
+nnoremap gr :vsc Edit.FindAllReferences<CR>
+nnoremap gf :vsc Edit.PeekDefinition<CR>
+
+" jump between compilation errors
+nnoremap <leader>e :vsc View.NextError<CR>
+nnoremap <leader>E :vsc View.PreviousError<CR>
+
+" break out of the tyranny of text! Navigate by method
+nnoremap <leader>m :vsc Edit.NextMethod<CR>
+nnoremap <leader>M :vsc Edit.PreviousMethod<CR>
+
+" code navigation
+nnoremap <C-o> :vsc View.NavigateBackward<cr>
+nnoremap <C-i> :vsc View.NavigateForward<cr>
+
+" window navigation (use vs settings instead)
+" nnoremap <A-l> :vsc Window.NextDocumentWindow<CR>
+" nnoremap <A-h> :vsc Window.PreviousDocumentWindow<CR>
+
+" testing and debugging
+nnoremap \b :vsc Debug.ToggleBreakpoint<CR>
+
+" Surround simulating bindings
+nnoremap s) ciw(<C-r>")<Esc>
+nnoremap s] ciw[<C-r>"]<Esc>
+nnoremap s} ciw{<C-r>"}<Esc>
+nnoremap s> ciw<lt><C-r>"><Esc>
+nnoremap s" ciw"<C-r>""<Esc>
+nnoremap s' ciw'<C-r>"'<Esc>
+nnoremap sw) ciW(<C-r>")<Esc>
+nnoremap sw] ciW[<C-r>"]<Esc>
+nnoremap sw} ciW{<C-r>"}<Esc>
+nnoremap sw> ciW<lt><C-r>"><Esc>
+nnoremap sw" ciW"<C-r>""<Esc>
+nnoremap sw' ciW'<C-r>"'<Esc>
+
+" Surround delete bindings
+nnoremap ds) vi(dvhp
+nnoremap ds] vi[dvhp
+nnoremap ds} vi{dvhp
+nnoremap ds> vi<dvhp
+nnoremap ds" vi"dvhp
+nnoremap ds' vi'dvhp
+
+" Surround change bindings
+nnoremap cs"' vi"oh<Esc>msvi"l<Esc>cl'<Esc>`scl'<Esc>
+nnoremap cs'" vi'oh<Esc>msvi'l<Esc>cl"<Esc>`scl"<Esc>
+
+" Surround visual selected text
+vnoremap S" c"<C-r>""<Esc>
+vnoremap S' c"<C-r>"'<Esc>
+vnoremap S) c(<C-r>")<Esc>
+vnoremap S] c[<C-r>"]<Esc>
+vnoremap S} c{<C-r>"}<Esc>
+vnoremap S> c<lt><C-r>"><Esc>
+vnoremap S* c/*<C-r>"*/<Esc>
+"vnoremap St c<lt>div><CR><C-r>"<Esc>
+" Surround in div tag and edit tag
+vnoremap St c<lt>div><CR><C-r>"<Esc>`<lt>lcw
