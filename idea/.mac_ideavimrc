@@ -49,8 +49,6 @@ set smartcase
 set visualbell
 " TODO idk
 set wrapscan
-" Disable Bell Sound
-set noerrorbells
 
 " === IDEA ===
 
@@ -107,7 +105,7 @@ vmap <leader>fm <Action>(ReformatCode)
 inoremap jj <Esc>
 inoremap jk <Esc>
 
-" Hide Highlights
+" Hide highlights
 nnoremap <esc> <esc>:nohl<CR>
 
 " Repeat Macro
@@ -126,10 +124,10 @@ nnoremap <leader>m :marks<Cr>
 nnoremap <leader>dm :delmarks a-zA-Z0-9<Cr>
 
 " Move Lines
-nmap <A-j> <Action>(MoveLineDown)
-nmap <A-k> <Action>(MoveLineUp)
-vmap <A-j> <Action>(MoveLineDown)
-vmap <A-k> <Action>(MoveLineUp)
+nnoremap <A-j> :m .+1<CR>==
+nnoremap <A-k> :m .-2<CR>==
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
 
 " Normal Mode New Line
 nnoremap <leader>o o<Esc>0"_D
@@ -158,8 +156,8 @@ nnoremap gP `[V`]
 " === Window / Tab Management ===
 
 " Switch Tabs
-nmap <S-h> <Action>(PreviousTab)
-nmap <S-l> <Action>(NextTab)
+nmap ˙ <Action>(PreviousTab) "<M-h>
+nmap ¬ <Action>(NextTab) "<M-l>
 
 " Close Tabs
 nnoremap <leader>x :bd<Cr>
@@ -182,8 +180,8 @@ nmap <C-Left> <Action>(DecrementWindowWidth)
 nmap <C-Right> <Action>(IncrementWindowWidth)
 
 " Split Tab
-map <C-s> <Action>(SplitVertically)
-map <C-v> <Action>(SplitHorizontally)
+map <C-v> <Action>(SplitVertically)
+map <C-s> <Action>(SplitHorizontally)
 
 " === Run / Debug / Task / Test ===
 
