@@ -182,8 +182,8 @@ nmap <C-Left> <Action>(DecrementWindowWidth)
 nmap <C-Right> <Action>(IncrementWindowWidth)
 
 " Split Tab
-map <C-s> <Action>(SplitVertically)
-map <C-v> <Action>(SplitHorizontally)
+map <a-s> <Action>(SplitVertically)
+map <a-v> <Action>(SplitHorizontally)
 
 " === Run / Debug / Task / Test ===
 
