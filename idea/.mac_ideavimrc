@@ -89,6 +89,8 @@ nmap <leader>E <Action>(ShowErrorDescription)
 " Jump Error
 nmap ]e <Action>(GotoNextError)zz
 nmap [e <Action>(GotoPreviousError)zz
+" Show code action
+nmap <leader>a <Action>(ShowIntentionActions)
 
 " Variable Rename
 nmap <leader>r <Action>(RenameElement)
