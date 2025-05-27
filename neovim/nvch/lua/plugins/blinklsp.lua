@@ -1,7 +1,0 @@
--- { import = "nvchad.blink.lazyspec" }
---
--- -- If you want to override blink config :
--- {
---    "Saghen/blink.cmp",
---     opts = { HERE }
--- }

@@ -93,4 +93,18 @@ for example
 }
 ```
 
+## TODO 
+
+Change of completion plugin
+
+```
+{ import = "nvchad.blink.lazyspec" }
+
+-- If you want to override blink config :
+{
+   "Saghen/blink.cmp",
+    opts = { HERE }
+}
+```
+
 Refer to source code of nvchad to see api that shouldn't be overwritten
