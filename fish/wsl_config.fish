@@ -1,27 +1,28 @@
 
 if status is-interactive
-    # Commands to run in interactive sessions can go here
-
-    # remove welcome prompt
+    # remove message
     set -U fish_greeting ""
 
     # bin
     # set -U fish_user_paths $HOME/.local/bin $fish_user_paths
+
+    # homebrew
     # eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-    # prompt theme
-    oh-my-posh init fish --config ~/neeon.omp.json | source
-
-    # ubuntu ls color
+    # change ls highlight color
     set -x LS_COLORS "ow=01;36;40"
 
     # python venv
     set -x VIRTUAL_ENV_DISABLE_PROMPT 1
 
-    # disable neofetch in vscode
-    # if test "$TERM_PROGRAM" != "vscode"
-    #     neofetch
-    # end
+    zoxide init fish | source
+
+    # starship primpt
+    starship init fish | source
+    set -gx STARSHIP_LOG error
+
+    # nvm
+    nvm use latest > /dev/null
 
     alias py=python3
 
