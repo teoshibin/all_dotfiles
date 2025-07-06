@@ -8,6 +8,12 @@ ARCH="$(uname -m)"
 EXTRACT_PATH="/tmp/nvim-extract-$$"
 TAR_PATH="/tmp/nvim-nightly-$$.tar.gz"
 
+# Always install to /usr/local
+INSTALL_PREFIX="/usr/local"
+BIN_DIR="$INSTALL_PREFIX/bin"
+LIB_DIR="$INSTALL_PREFIX/lib/nvim-nightly"
+SHARE_DIR="$INSTALL_PREFIX/share/nvim-nightly"
+
 # Color codes
 CYAN='\033[0;36m'
 GREEN='\033[0;32m'
@@ -27,23 +33,31 @@ cleanup() {
 # Set trap for cleanup
 trap cleanup EXIT INT TERM
 
-# Determine install location based on permissions
-if [[ -w "/usr/local/bin" ]] && [[ -w "/usr/local" ]]; then
-    # User has write access to /usr/local
-    INSTALL_PREFIX="/usr/local"
-elif [[ "$HOME" == "/root" ]] || [[ "${SUDO_USER:-}" != "" ]]; then
-    # Running as root or with sudo
-    INSTALL_PREFIX="/usr/local"
-else
-    # Need to use user directory
-    INSTALL_PREFIX="$HOME/.local"
-    # Ensure ~/.local/bin exists
-    mkdir -p "$HOME/.local/bin"
+# Check if we need sudo
+SUDO_CMD=""
+if [[ ! -w "$INSTALL_PREFIX" ]] || [[ ! -w "$BIN_DIR" ]]; then
+    if [[ "$EUID" -eq 0 ]]; then
+        # Already root
+        SUDO_CMD=""
+    elif command -v sudo &> /dev/null; then
+        # Need sudo
+        SUDO_CMD="sudo"
+        echo -e "${YELLOW}Installation to $INSTALL_PREFIX requires sudo privileges${NC}"
+    else
+        echo -e "${RED}Cannot write to $INSTALL_PREFIX and sudo is not available${NC}"
+        echo -e "${RED}Run as root or install sudo${NC}"
+        exit 1
+    fi
 fi
 
-BIN_DIR="$INSTALL_PREFIX/bin"
-LIB_DIR="$INSTALL_PREFIX/lib/nvim-nightly"
-SHARE_DIR="$INSTALL_PREFIX/share/nvim-nightly"
+# Function to run commands with sudo if needed
+run_privileged() {
+    if [[ -n "$SUDO_CMD" ]]; then
+        $SUDO_CMD "$@"
+    else
+        "$@"
+    fi
+}
 
 # Determine download URL based on OS and architecture
 case "$OS" in
@@ -58,8 +72,11 @@ case "$OS" in
         ;;
     Linux)
         if [[ "$ARCH" == "x86_64" ]]; then
-            DOWNLOAD_URL="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux64.tar.gz"
-            ARCHIVE_NAME="nvim-linux64"
+            DOWNLOAD_URL="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-x86_64.tar.gz"
+            ARCHIVE_NAME="nvim-linux-x86_64"
+        elif [[ "$ARCH" == "aarch64" ]]; then
+            DOWNLOAD_URL="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-arm64.tar.gz"
+            ARCHIVE_NAME="nvim-linux-arm64"
         else
             echo -e "${RED}Unsupported Linux architecture: $ARCH${NC}"
             exit 1
@@ -74,6 +91,9 @@ esac
 echo -e "\n${CYAN}Neovim Nightly Installer${NC}"
 echo -e "${CYAN}========================${NC}\n"
 echo -e "${GREEN}Installing to: $INSTALL_PREFIX${NC}"
+if [[ -n "$SUDO_CMD" ]]; then
+    echo -e "${YELLOW}Using sudo for installation${NC}\n"
+fi
 
 # Check for required commands
 for cmd in curl tar; do
@@ -85,10 +105,13 @@ done
 
 # Remove existing installation
 echo -e "${YELLOW}Checking for existing installation...${NC}"
-[[ -f "$BIN_DIR/nvin" ]] && rm -f "$BIN_DIR/nvin"
-[[ -f "$BIN_DIR/nvin.real" ]] && rm -f "$BIN_DIR/nvin.real"
-[[ -d "$LIB_DIR" ]] && rm -rf "$LIB_DIR"
-[[ -d "$SHARE_DIR" ]] && rm -rf "$SHARE_DIR"
+if [[ -f "$BIN_DIR/nvin" ]] || [[ -f "$BIN_DIR/nvin.real" ]] || [[ -d "$LIB_DIR" ]] || [[ -d "$SHARE_DIR" ]]; then
+    echo -e "${YELLOW}Removing existing installation...${NC}"
+    run_privileged rm -f "$BIN_DIR/nvin" 2>/dev/null || true
+    run_privileged rm -f "$BIN_DIR/nvin.real" 2>/dev/null || true
+    run_privileged rm -rf "$LIB_DIR" 2>/dev/null || true
+    run_privileged rm -rf "$SHARE_DIR" 2>/dev/null || true
+fi
 
 # Download with retry
 echo -e "${GREEN}Downloading Neovim nightly for $OS $ARCH...${NC}"
@@ -144,8 +167,9 @@ fi
 
 echo -e "${GREEN}Found Neovim in: $(basename "$NVIM_SOURCE_PATH")${NC}"
 
-# Create directories
-mkdir -p "$BIN_DIR" "$LIB_DIR" "$SHARE_DIR" || {
+# Create directories with proper permissions
+echo -e "${GREEN}Creating installation directories...${NC}"
+run_privileged mkdir -p "$BIN_DIR" "$LIB_DIR" "$SHARE_DIR" || {
     echo -e "${RED}Failed to create installation directories${NC}"
     exit 1
 }
@@ -155,32 +179,33 @@ echo -e "${GREEN}Installing files...${NC}"
 
 # Copy lib files if they exist
 if [[ -d "$NVIM_SOURCE_PATH/lib" ]]; then
-    cp -r "$NVIM_SOURCE_PATH/lib/"* "$LIB_DIR/" 2>/dev/null || true
+    run_privileged cp -r "$NVIM_SOURCE_PATH/lib/"* "$LIB_DIR/" 2>/dev/null || true
 fi
 
 # Copy share files if they exist
 if [[ -d "$NVIM_SOURCE_PATH/share" ]]; then
-    cp -r "$NVIM_SOURCE_PATH/share/"* "$SHARE_DIR/" 2>/dev/null || true
+    run_privileged cp -r "$NVIM_SOURCE_PATH/share/"* "$SHARE_DIR/" 2>/dev/null || true
 fi
 
 # Copy binary
-if ! cp "$NVIM_SOURCE_PATH/bin/nvim" "$BIN_DIR/nvin.real"; then
+if ! run_privileged cp "$NVIM_SOURCE_PATH/bin/nvim" "$BIN_DIR/nvin.real"; then
     echo -e "${RED}Failed to copy nvim binary${NC}"
     exit 1
 fi
-chmod +x "$BIN_DIR/nvin.real"
+run_privileged chmod +x "$BIN_DIR/nvin.real"
 
 # Create wrapper script with proper quoting
-cat > "$BIN_DIR/nvin" << 'EOF'
-#!/bin/sh
+WRAPPER_CONTENT='#!/bin/sh
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 INSTALL_PREFIX="$(dirname "$SCRIPT_DIR")"
 export VIM="$INSTALL_PREFIX/share/nvim-nightly/runtime"
 export VIMRUNTIME="$INSTALL_PREFIX/share/nvim-nightly/runtime"
 exec "$SCRIPT_DIR/nvin.real" "$@"
-EOF
+'
 
-chmod +x "$BIN_DIR/nvin"
+# Write wrapper script
+echo "$WRAPPER_CONTENT" | run_privileged tee "$BIN_DIR/nvin" > /dev/null
+run_privileged chmod +x "$BIN_DIR/nvin"
 
 # Verify installation works
 echo -e "${GREEN}Verifying installation...${NC}"
@@ -191,47 +216,33 @@ if ! "$BIN_DIR/nvin" --version &>/dev/null; then
     exit 1
 fi
 
-# Check if ~/.local/bin needs to be added to PATH
-if [[ "$INSTALL_PREFIX" == "$HOME/.local" ]] && [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
-    echo -e "\n${YELLOW}ACTION REQUIRED: Add $HOME/.local/bin to your PATH${NC}"
+# Check if /usr/local/bin is in PATH (it should be on most systems)
+if [[ ":$PATH:" != *":/usr/local/bin:"* ]] && [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
+    echo -e "\n${YELLOW}WARNING: $BIN_DIR is not in your PATH${NC}"
+    echo -e "${GRAY}Add this line to your shell config:${NC}"
     
     SHELL_NAME="$(basename "${SHELL:-/bin/bash}")"
-    RC_FILE=""
-    
-    case "$SHELL_NAME" in
-        bash)
-            RC_FILE="${BASH_ENV:-$HOME/.bashrc}"
-            [[ "$OS" == "Darwin" ]] && RC_FILE="$HOME/.bash_profile"
-            ;;
-        zsh)
-            RC_FILE="${ZDOTDIR:-$HOME}/.zshrc"
-            ;;
-        fish)
-            RC_FILE="$HOME/.config/fish/config.fish"
-            ;;
-        *)
-            RC_FILE="$HOME/.profile"
-            ;;
-    esac
-    
-    echo -e "${GRAY}Add this line to $RC_FILE:${NC}"
-    
     if [[ "$SHELL_NAME" == "fish" ]]; then
-        echo -e "${CYAN}set -gx PATH \$HOME/.local/bin \$PATH${NC}"
+        echo -e "${CYAN}set -gx PATH $BIN_DIR \$PATH${NC}"
     else
-        echo -e "${CYAN}export PATH=\"\$HOME/.local/bin:\$PATH\"${NC}"
+        echo -e "${CYAN}export PATH=\"$BIN_DIR:\$PATH\"${NC}"
     fi
-    
-    echo -e "${GRAY}Then run: source $RC_FILE${NC}"
 fi
 
 # Final status
 echo -e "\n${GREEN}Installation complete!${NC}"
-echo -e "${GRAY}Binary: $BIN_DIR/nvin${NC}"
+echo -e "${GRAY}Location: $BIN_DIR/nvin${NC}"
 echo -e "${GRAY}Command: nvin${NC}"
 
 VERSION=$("$BIN_DIR/nvin" --version 2>&1 | head -n 1)
 echo -e "${GRAY}Version: $VERSION${NC}"
 
-# Success - cleanup handled by trap
+# Test if available in current PATH
+if command -v nvin &> /dev/null; then
+    echo -e "\n${GREEN}✓ The 'nvin' command is ready to use!${NC}"
+else
+    echo -e "\n${YELLOW}Note: Restart your terminal to use the 'nvin' command${NC}"
+fi
+
+# Success
 exit 0
