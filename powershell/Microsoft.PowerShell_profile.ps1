@@ -37,15 +37,25 @@ Set-PSReadLineKeyHandler -Key ctrl+n -Function NextHistory
 function Get-Nvim-Config {
     param(
         [string]$ConfigName,
+        [string]$NvimCommand = "nvim",
         [Parameter(ValueFromRemainingArguments=$true)]
-        $args
+        [string[]]$RemainingArgs
     )
     $env:NVIM_APPNAME = $ConfigName
-    nvim $args
+    & $NvimCommand @RemainingArgs
     Remove-Item Env:\NVIM_APPNAME
 }
-function Get-Nvim-Chad { Get-Nvim-Config -ConfigName "nvch" $args  }
+
+function Get-Nvim-Chad { 
+    Get-Nvim-Config -ConfigName "nvch" -NvimCommand "nvim" @args 
+}
+
+function Get-Nvim-Chad-Nightly { 
+    Get-Nvim-Config -ConfigName "nvch-nightly" -NvimCommand "nvin" @args 
+}
+
 New-Alias -Name nv -Value Get-Nvim-Chad -Force -Option AllScope
+New-Alias -Name nvn -Value Get-Nvim-Chad-Nightly -Force -Option AllScope
 
 ## Custom applications ##
 

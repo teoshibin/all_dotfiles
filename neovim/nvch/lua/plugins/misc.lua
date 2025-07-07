@@ -1,16 +1,5 @@
 return {
     {
-        -- :VimBeGood
-        "ThePrimeagen/vim-be-good",
-        cmd = "VimBeGood",
-    },
-    {
-        -- :CellularAutomaton make_it_rain
-        -- :CellularAutomaton game_of_life
-        "eandrju/cellular-automaton.nvim",
-        cmd = "CellularAutomaton",
-    },
-    {
         -- gx for opening url as netrw got disabled by nvchad
         "chrishrb/gx.nvim",
         keys = {
