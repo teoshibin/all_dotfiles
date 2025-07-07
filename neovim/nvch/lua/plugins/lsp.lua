@@ -40,6 +40,11 @@ return {
             require("configs.lspconfig")
         end,
     },
+    -- {
+    --     -- TODO: update this
+    --     "Saghen/blink.cmp",
+    --     opts = {  },
+    -- },
     {
         -- override completion keybinds
         "hrsh7th/nvim-cmp",
@@ -137,26 +142,6 @@ return {
                 "<leader>eq",
                 "<cmd>Trouble qflist toggle<cr>",
                 desc = "Trouble Quickfix List",
-            },
-        },
-    },
-    {
-        "stevearc/aerial.nvim",
-        config = function()
-            local map = require("mappings").map
-            require("aerial").setup({
-                on_attach = function(bufnr)
-                    map("n", "[f", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-                    map("n", "]f", "<cmd>AerialNext<CR>", { buffer = bufnr })
-                end,
-            })
-        end,
-        cmd = "AerialToggle",
-        keys = {
-            {
-                "<leader>ea",
-                "<cmd>AerialToggle<CR>",
-                desc = "Toggle Aerial",
             },
         },
     },

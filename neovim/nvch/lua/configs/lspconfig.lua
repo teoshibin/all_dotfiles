@@ -23,6 +23,7 @@ local servers = {
     "jdtls", -- java
     "basedpyright", -- python
     "gdshader_lsp", -- TODO
+    "gopls",
 }
 
 for _, lsp in ipairs(servers) do

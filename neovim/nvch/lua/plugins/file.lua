@@ -1,5 +1,41 @@
 return {
     {
+        "teoshibin/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        branch = "powershell-install-cmd-fix",
+        build = function()
+            vim.fn["mkdp#util#install"]()
+        end,
+    },
+    {
+        "ray-x/go.nvim",
+        dependencies = { -- optional packages
+            "ray-x/guihua.lua",
+            "neovim/nvim-lspconfig",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        opts = {
+            -- lsp_keymaps = false,
+            -- other options
+        },
+        config = function(lp, opts)
+            require("go").setup(opts)
+            print(vim.inspect(opts))
+            local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
+            vim.api.nvim_create_autocmd("BufWritePre", {
+                pattern = "*.go",
+                callback = function()
+                    require("go.format").goimports()
+                end,
+                group = format_sync_grp,
+            })
+        end,
+        -- event = { "CmdlineEnter" },
+        ft = { "go", "gomod" },
+        build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
+    },
+    {
         -- NOTE: Rustaceanvim does not use Mason's installation of rust-analyzer
         -- Install rust-analyzer: `rustup component add rust-analyzer`
         -- doc: https://rust-analyzer.github.io/manual.html#rustup
@@ -68,41 +104,6 @@ return {
                 },
                 -- dap = {},
             }
-        end,
-    },
-    {
-        "ray-x/go.nvim",
-        dependencies = { -- optional packages
-            "ray-x/guihua.lua",
-            "neovim/nvim-lspconfig",
-            "nvim-treesitter/nvim-treesitter",
-        },
-        opts = {
-            -- lsp_keymaps = false,
-            -- other options
-        },
-        config = function(lp, opts)
-            require("go").setup(opts)
-            local format_sync_grp = vim.api.nvim_create_augroup("GoFormat", {})
-            vim.api.nvim_create_autocmd("BufWritePre", {
-                pattern = "*.go",
-                callback = function()
-                    require("go.format").goimports()
-                end,
-                group = format_sync_grp,
-            })
-        end,
-        event = { "CmdlineEnter" },
-        ft = { "go", "gomod" },
-        build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
-    },
-    {
-        "teoshibin/markdown-preview.nvim",
-        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-        ft = { "markdown" },
-        branch = "powershell-install-cmd-fix",
-        build = function()
-            vim.fn["mkdp#util#install"]()
         end,
     },
 }

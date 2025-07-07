@@ -2,8 +2,23 @@
 local M = {}
 local map = vim.keymap.set
 
+-- NOTE: copied and Modified from https://github.com/NvChad/ui/blob/v3.0/lua/nvchad/lsp/init.lua
+local diagnostic_config = function()
+  local x = vim.diagnostic.severity
+
+  vim.diagnostic.config {
+    virtual_text = false,
+    virtual_lines = true,
+    signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
+    underline = true,
+    float = { border = "single" },
+  }
+end
+
 -- export on_attach & capabilities
 M.on_attach = function(_, bufnr)
+  diagnostic_config()
+
   local function opts(desc)
     return { buffer = bufnr, desc = "LSP " .. desc }
   end
@@ -62,7 +77,10 @@ M.capabilities.textDocument.completion.completionItem = {
 
 M.defaults = function()
   dofile(vim.g.base46_cache .. "lsp")
-  require("nvchad.lsp").diagnostic_config()
+
+  -- NOTE: Modified, make diagnostic text single line and multi line on hover
+  -- require("nvchad.lsp").diagnostic_config()
+  diagnostic_config()
 
   require("lspconfig").lua_ls.setup {
     on_attach = M.on_attach,

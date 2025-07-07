@@ -81,11 +81,6 @@ opt.jumpoptions = "view"
 -- Max char line (not transparent)
 opt.colorcolumn = { 120 }
 
--- vim dianostics
--- vim.diagnostic.config({
---     virtual_lines = true
--- })
-
 -- Change terminal shell, See :h shell-powershell
 if require("custom.os").isWindows() then
     -- local shell = vim.fn.executable("pwsh") == 1 and "pwsh -nol" or "powershell -nol"
@@ -95,8 +90,8 @@ if require("custom.os").isWindows() then
         .. "[Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();"
         .. "$PSDefaultParameterValues['Out-File:Encoding']='utf8';"
         .. "Remove-Alias -Force -ErrorAction SilentlyContinue tee;"
-    vim.o.shellredir = "2>&1 | %%{ \"$_\" } | Out-File %s; exit $LastExitCode"
-    vim.o.shellpipe = "2>&1 | %%{ \"$_\" } | tee %s; exit $LastExitCode"
+    vim.o.shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
+    vim.o.shellpipe = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode'
     vim.o.shellquote = ""
     vim.o.shellxquote = ""
 end
@@ -104,7 +99,7 @@ end
 -- generic quit command that will save and quit all
 -- including editors and terminals
 vim.api.nvim_create_user_command("Quit", function()
-    local success = pcall(function ()
+    local success = pcall(function()
         vim.cmd("wa")
     end)
     if success then
@@ -116,26 +111,23 @@ end, {})
 
 -- remove shada file
 vim.api.nvim_create_user_command("ClearShada", function()
-        local shada_path = vim.fn.expand(vim.fn.stdpath('data') .. "/shada")
-        local files = vim.fn.glob(shada_path .. "/*", false, true)
-        local all_success = 0
-        for _, file in ipairs(files) do
-            local file_name = vim.fn.fnamemodify(file, ":t")
-            if file_name == "main.shada" then
-                -- skip your main.shada file
-                goto continue
-            end
-            local success = vim.fn.delete(file)
-            all_success = all_success + success
-            if success ~= 0 then
-                vim.notify("Couldn't delete file '" .. file_name .. "'", vim.log.levels.WARN)
-            end
-            ::continue::
+    local shada_path = vim.fn.expand(vim.fn.stdpath("data") .. "/shada")
+    local files = vim.fn.glob(shada_path .. "/*", false, true)
+    local all_success = 0
+    for _, file in ipairs(files) do
+        local file_name = vim.fn.fnamemodify(file, ":t")
+        if file_name == "main.shada" then
+            -- skip your main.shada file
+            goto continue
         end
-        if all_success == 0 then
-            vim.print("Successfully deleted all temporary shada files")
+        local success = vim.fn.delete(file)
+        all_success = all_success + success
+        if success ~= 0 then
+            vim.notify("Couldn't delete file '" .. file_name .. "'", vim.log.levels.WARN)
         end
-    end,
-    { desc = "Clears all the .tmp shada files" }
-)
-
+        ::continue::
+    end
+    if all_success == 0 then
+        vim.print("Successfully deleted all temporary shada files")
+    end
+end, { desc = "Clears all the .tmp shada files" })
