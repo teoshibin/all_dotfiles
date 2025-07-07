@@ -69,7 +69,7 @@ return {
     {
         "epwalsh/obsidian.nvim",
         version = "*", -- recommended, use latest release instead of latest commit
-        enabled = require("configs.obsidian").checkDirectory(),
+        enabled = require("configs.obsidian").checkDirectory(false),
         lazy = true,
         ft = "markdown",
         -- event = {

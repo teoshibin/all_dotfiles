@@ -4,13 +4,12 @@ M.vault = vim.fs.normalize(vim.fn.expand("~") .. "/obsidian")
 M.cd_vault_cmd = "cd " .. M.vault
 
 --- Check if obsidian directory exist on the system user directory
---- @param notify boolean|nil print message when, default to true
+--- @param notify boolean print message when, default to true
 --- @return boolean true when folder exist
 function M.checkDirectory(notify)
     local exist = require("custom.path").is_directory(M.vault)
-    local warn = notify or true
-    if not exist and warn then
-        vim.notify("Obsidian Folder Doesn't exist", vim.log.levels.WARN)
+    if not exist and notify then
+        vim.notify_once("Obsidian vault not found", vim.log.levels.INFO)
     end
     return exist
 end
