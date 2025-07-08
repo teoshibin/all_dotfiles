@@ -1,3 +1,4 @@
+
 if status is-interactive
     # remove welcome prompt
     set -U fish_greeting ""
@@ -5,19 +6,6 @@ if status is-interactive
     # homebrew
     eval "$(/opt/homebrew/bin/brew shellenv)"
     fish_add_path /opt/homebrew/bin
-
-    # neovim
-    function nvim_config -a config_name
-        set -x NVIM_APPNAME $config_name
-        set -e argv[1]
-        nvim $argv
-    end
-    alias nv='nvim_config "nvch"'
-
-    # intellij
-    set -gx PATH /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS $PATH
-    # nvm
-    set -gx NVM_DIR (brew --prefix nvm)
 
     # git
     alias gs='git status -sb'
@@ -50,6 +38,42 @@ if status is-interactive
     alias gstd='git stash drop'
     alias gstc='git stash clear'
 
+    # intellij
+    set -gx PATH /Applications/IntelliJ\ IDEA\ CE.app/Contents/MacOS $PATH
+
+    # starship prompt
+    starship init fish | source
+    set -gx STARSHIP_LOG error
+
+    # nvm
+    set -gx NVM_DIR (brew --prefix nvm)
+
+    # neovim
+    # function nvim_config -a config_name
+    #     set -x NVIM_APPNAME $config_name
+    #     set -e argv[1]
+    #     nvim $argv
+    # end
+    # alias nv='nvim_config "nvch"'
+    function nvim_config -a config_name
+        set -x NVIM_APPNAME $config_name
+        set -e argv[1]
+        if contains -- --nightly $argv
+            set -l new_argv
+            for arg in $argv
+                if test "$arg" != "--nightly"
+                    set new_argv $new_argv $arg
+                end
+            end
+            nvin $new_argv
+        else
+            nvim $argv
+        end
+    end
+    alias nv='nvim_config "nvch"'
+    alias nvn='nvim_config "nvch" --nightly'
+
+    # fzf git chekcout
     function gch
         # Check if any arguments were provided
         if set -q argv[1]
