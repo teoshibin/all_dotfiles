@@ -9,6 +9,7 @@ M.keys = {
 
     -- custom
     { key = 'd', mods = 'LEADER', action = act.ActivateLastTab },
+    { key = 'f', mods = 'LEADER', action = act.Search 'CurrentSelectionOrEmptyString' },
 
     -- windows ctrl backspace delete word
     { key = 'Backspace', mods = 'CTRL', action = act.SendString("\x17") },
@@ -36,8 +37,8 @@ M.keys = {
     { key = 'l', mods = 'LEADER', action = act.ShowDebugOverlay },
     { key = '0', mods = 'CTRL', action = act.ResetFontSize },
     { key = 'x', mods = 'CTRL', action = act.ActivateCopyMode },
-    { key = 'f', mods = 'CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
-    { key = 'f', mods = 'SUPER', action = act.Search 'CurrentSelectionOrEmptyString' },
+    -- { key = 'f', mods = 'CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
+    -- { key = 'f', mods = 'SUPER', action = act.Search 'CurrentSelectionOrEmptyString' },
     { key = 'c', mods = 'SHIFT|CTRL', action = act.CopyTo 'Clipboard' },
     { key = 'c', mods = 'SUPER', action = act.CopyTo 'Clipboard' },
     { key = 'v', mods = 'SHIFT|CTRL', action = act.PasteFrom 'Clipboard' },
