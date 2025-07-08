@@ -8,6 +8,7 @@ M.leader = { key = "e", mods = "ALT", timeout_milliseconds = 1500 }
 M.keys = {
 
     -- custom
+    { key = 'd', mods = 'LEADER', action = act.ActivateLastTab },
 
     -- windows ctrl backspace delete word
     { key = 'Backspace', mods = 'CTRL', action = act.SendString("\x17") },
