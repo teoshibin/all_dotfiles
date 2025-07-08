@@ -1,5 +1,5 @@
 
-theme = kanagawabones
+theme = catppuccin-mocha
 font-family = "JetBrainsMonoNL Nerd Font"
 font-size = 16
 window-save-state = always
