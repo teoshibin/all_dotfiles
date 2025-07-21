@@ -14,7 +14,7 @@ config.font = wezterm.font_with_fallback {
   'monospace'
 }
 if platform.isMac() then
-  config.font_size = 12
+  config.font_size = 16
 else
   config.font_size = 12.25
 end
@@ -56,7 +56,8 @@ config.cursor_thickness = "4px"
 
 -- Keymaps
 config.disable_default_key_bindings = true
-local mappings = require("custom/mappings")
+-- local mappings = require("custom/mappings")
+local mappings = require("custom/mappings2")
 config.keys = mappings.keys
 config.key_tables = mappings.key_tables
 config.leader = mappings.leader
