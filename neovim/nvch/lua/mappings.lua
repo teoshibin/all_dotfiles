@@ -26,9 +26,6 @@ end
 function M.general()
     require("nvchad.mappings")
 
-    -- unmap for trouble
-    nomap("n", "<leader>e")
-
     -- unmap for dap
     nomap("n", "<leader>b")
 
@@ -36,7 +33,6 @@ function M.general()
     nomap("n", "<leader>n")
 
     -- tabs
-
     map("n", "<leader>tn", "<cmd>tabnew<CR>", { desc = "General new tab" })
     map("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "General close tab" })
     map("n", "[t", "<cmd>tabp<CR>", { desc = "General previous tab" })
@@ -482,8 +478,38 @@ function M.zenMode()
     map("n", "<leader>z", "<cmd>ZenMode<CR>", { desc = "ZenMode Toggle zen mode" })
 end
 
+-- Fyler file manager, an alternative between nvim tree and oil
+function M.fyler()
+    nomap("n", "<C-n>")     -- unmap nvim tree toggle
+    nomap("n", "<leader>e")   -- unmap nvim tree focus
+
+    local function toggleFylerWindow()
+        -- Check if Fyler window is open
+        local fyler_win = nil
+        for _, win in ipairs(vim.api.nvim_list_wins()) do
+            local buf = vim.api.nvim_win_get_buf(win)
+            local ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
+            if ft == 'fyler' then
+                fyler_win = win
+                break
+            end
+        end
+
+        if fyler_win then
+            -- Close the window if it's open
+            vim.api.nvim_win_close(fyler_win, true)
+        else
+            -- Open Fyler if it's closed
+            vim.cmd("Fyler kind=float")
+        end
+    end
+
+    map("n", "<C-n>", toggleFylerWindow, { desc = "Toggle Fyler window" })
+end
+
 function M.setup()
     M.general()
+    M.fyler()
     M.telescope()
     M.obisidan()
 end
