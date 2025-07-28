@@ -16,7 +16,8 @@ local function defaults(mods)
     }, mods)
 end
 
--- Auto Server Configuration
+-- Auto Configuration --
+
 local servers = {
     "marksman", -- markdown
     "ltex", -- grammar check
@@ -39,43 +40,52 @@ lspconfig.ltex.setup(defaults({
     },
 }))
 
--- powershell --
+-- Powershell --
 
 lspconfig.powershell_es.setup(defaults({
     bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services/",
 }))
 
--- kotlin --
+-- Old Kotlin --
 
 -- https://github.com/fwcd/kotlin-language-server
 -- https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/kotlin_language_server.lua
 -- Doesn't update immediately after escape, sometimes require to escape multiple times for it to detect the changes
 -- Install java, kotlin, gradle (probably not required) and the server itself through mason
-local function kt_root_dir(filename)
-    local norm_name = vim.fs.normalize(filename)
-    local util = require("lspconfig.util")
-    return util.root_pattern(unpack({
-        "settings.gradle", -- Gradle (multi-project)
-        "settings.gradle.kts", -- Gradle (multi-project)
-        "build.xml", -- Ant
-        "pom.xml", -- Maven
-        "build.gradle", -- Gradle
-        "build.gradle.kts", -- Gradle
-        ".git",
-    }))(norm_name)
-end
-lspconfig.kotlin_language_server.setup(defaults({
-    root_dir = kt_root_dir,
-    single_file_support = true,
-    cmd = { "kotlin-language-server" },
-    settings = {},
-    init_options = {
-        storagePath = kt_root_dir(vim.fn.expand("%:p:h")),
-        -- provideFormatter = true,
-        embeddedLanguages = { css = true, javascript = true },
-        configurationSection = { "html", "css", "javascript" },
-    },
-}))
+-- local function kt_root_dir(filename)
+--     local norm_name = vim.fs.normalize(filename)
+--     local util = require("lspconfig.util")
+--     return util.root_pattern(table.unpack({
+--         "settings.gradle", -- Gradle (multi-project)
+--         "settings.gradle.kts", -- Gradle (multi-project)
+--         "build.xml", -- Ant
+--         "pom.xml", -- Maven
+--         "build.gradle", -- Gradle
+--         "build.gradle.kts", -- Gradle
+--         ".git",
+--     }))(norm_name)
+-- end
+-- lspconfig.kotlin_language_server.setup(defaults({
+--     root_dir = kt_root_dir,
+--     single_file_support = true,
+--     cmd = { "kotlin-language-server" },
+--     settings = {},
+--     init_options = {
+--         storagePath = kt_root_dir(vim.fn.expand("%:p:h")),
+--         -- provideFormatter = true,
+--         embeddedLanguages = { css = true, javascript = true },
+--         configurationSection = { "html", "css", "javascript" },
+--     },
+-- }))
+
+-- Official Kotiln --
+-- lspconfig.kotlin_lsp.setup(defaults({
+--     cmd = { "kotlin-lsp", "--stdio" },
+--     filetypes = { "kotlin" },
+--     root_markers = { "settings.gradle", "settings.gradle.kts", "pom.xml", "build.gradle", "build.gradle.kts", "workspace.json" },
+-- }))
+
+-- GDScript --
 
 local port = os.getenv("GDScript_Port") or "6005"
 local nc_ex = require("custom.os").isWindows() and "ncat" or "nc"
@@ -84,18 +94,3 @@ lspconfig.gdscript.setup(defaults({
     cmd = { nc_ex, "localhost", port },
 }))
 
--- perl --
-
---[[
-    1. perlpls
-    https://github.com/FractalBoy/perl-language-server
-    https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#perlpls
-
-    2. perlls Perl::LangugageServer
-    https://github.com/richterger/Perl-LanguageServer/tree/master/clients/vscode/perl
-    https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#perlls
-
-    3. PerlNavigator
-    https://github.com/bscan/PerlNavigator
-    https://github.com/neovim/nvim-lspconfig/blob/master/doc/server_configurations.md#perlnavigator
---]]
