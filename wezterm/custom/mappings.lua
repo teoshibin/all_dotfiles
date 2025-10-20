@@ -7,22 +7,34 @@ M.leader = { key = "e", mods = "ALT", timeout_milliseconds = 1500 }
 
 M.keys = {
 
-    -- custom
+    --
+    -- CUSTOM
+    --
 
-    -- windows ctrl backspace delete word
+    -- Navigation
+    { key = 'd', mods = 'LEADER', action = act.ActivateLastTab },
+
+    -- Tool
+    { key = 'f', mods = 'LEADER', action = act.Search 'CurrentSelectionOrEmptyString' },
+
+    -- Spawn Tabs / Panes
+    { key = 't', mods = "LEADER", action = act.SpawnTab "CurrentPaneDomain", },
+    { key = 'v', mods = "LEADER", action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
+    { key = 's', mods = "LEADER", action = act.SplitVertical { domain = "CurrentPaneDomain" } },
+
+    -- Miscs
+    -- Windows ctrl backspace delete word
     { key = 'Backspace', mods = 'CTRL', action = act.SendString("\x17") },
     -- macos option and command backspace delete word and line
     { key = 'Backspace', mods = 'SUPER', action = act.SendString("\x15") },
     { key = 'Backspace', mods = 'ALT', action = act.SendString("\x17") },
 
-    { key = 'c', mods = "LEADER", action = act.SpawnTab "CurrentPaneDomain", },
+
     { key = 'x', mods = "LEADER", action = act.CloseCurrentPane { confirm = true } },
     { key = 'w', mods = 'LEADER', action = act.CloseCurrentTab{ confirm = true } },
     { key = 'w', mods = 'SUPER', action = act.CloseCurrentTab{ confirm = true } },
     { key = 'b', mods = "LEADER", action = act.ActivateTabRelative(-1) },
     { key = 'n', mods = "LEADER", action = act.ActivateTabRelative(1) },
-    { key = 'v', mods = "LEADER", action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
-    { key = 's', mods = "LEADER", action = act.SplitVertical { domain = "CurrentPaneDomain" } },
     { key = 'h', mods = "ALT", action = act.ActivatePaneDirection "Left" },
     { key = 'j', mods = "ALT", action = act.ActivatePaneDirection "Down" },
     { key = 'k', mods = "ALT", action = act.ActivatePaneDirection "Up" },
@@ -35,8 +47,8 @@ M.keys = {
     { key = 'l', mods = 'LEADER', action = act.ShowDebugOverlay },
     { key = '0', mods = 'CTRL', action = act.ResetFontSize },
     { key = 'x', mods = 'CTRL', action = act.ActivateCopyMode },
-    { key = 'f', mods = 'CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
-    { key = 'f', mods = 'SUPER', action = act.Search 'CurrentSelectionOrEmptyString' },
+    -- { key = 'f', mods = 'CTRL', action = act.Search 'CurrentSelectionOrEmptyString' },
+    -- { key = 'f', mods = 'SUPER', action = act.Search 'CurrentSelectionOrEmptyString' },
     { key = 'c', mods = 'SHIFT|CTRL', action = act.CopyTo 'Clipboard' },
     { key = 'c', mods = 'SUPER', action = act.CopyTo 'Clipboard' },
     { key = 'v', mods = 'SHIFT|CTRL', action = act.PasteFrom 'Clipboard' },
@@ -49,10 +61,10 @@ M.keys = {
     { key = 'y', mods = 'CTRL', action = act.ScrollByLine(-1) },
     { key = 'e', mods = 'CTRL', action = act.ScrollByLine(1) },
 
+    -- toggle opacity
     {
-        key = "t",
+        key = "o",
         mods = "LEADER",
-        -- toggling opacity
         action = wezterm.action_callback(function(window, _)
             local overrides = window:get_config_overrides() or {}
             if overrides.window_background_opacity == 1.0 then

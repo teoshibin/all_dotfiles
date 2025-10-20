@@ -13,12 +13,20 @@ config.font = wezterm.font_with_fallback {
   'Consolas',
   'monospace'
 }
-config.font_size = 12.25
+if platform.isMac() then
+  config.font_size = 16
+else
+  config.font_size = 12.25
+end
 config.line_height = 0.9
 
 -- Theme
 config.color_scheme = "Catppuccin Mocha"
-config.window_background_opacity = 1.0
+if platform.isMac() then
+  config.window_background_opacity = 0.9
+else
+  config.window_background_opacity = 1.0
+end
 
 -- Tab
 config.use_fancy_tab_bar = false
@@ -48,7 +56,8 @@ config.cursor_thickness = "4px"
 
 -- Keymaps
 config.disable_default_key_bindings = true
-local mappings = require("custom/mappings")
+-- local mappings = require("custom/mappings")
+local mappings = require("custom/mappings2")
 config.keys = mappings.keys
 config.key_tables = mappings.key_tables
 config.leader = mappings.leader

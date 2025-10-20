@@ -1,5 +1,6 @@
 return {
     {
+        enabled = false,
         -- workspace file rename with imports
         -- integrated with nvim-tree
         "antosha417/nvim-lsp-file-operations",
@@ -13,6 +14,7 @@ return {
         end,
     },
     {
+        enabled = false,
         "nvim-tree/nvim-tree.lua",
         opts = function()
             local defaults = require("nvchad.configs.nvimtree")
@@ -41,6 +43,38 @@ return {
             }
             return vim.tbl_deep_extend("force", defaults, configs)
         end,
+    },
+    {
+        enabled = false,
+        -- file manager
+        "stevearc/oil.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        opts = {
+            delete_to_trash = true,
+            view_options = {
+                show_hidden = true,
+            },
+            float = {
+                padding = 5,
+                win_options = {
+                    winblend = 5,
+                },
+            },
+            keymaps = {
+                ["<leader>-"] = "actions.close",
+            },
+        },
+        cmd = "Oil",
+        keys = {
+            { "<leader>-", "<CMD>Oil<CR>", mode = "n", desc = "Toggle oil file manager" },
+        },
+    },
+    {
+        "A7Lavinraj/fyler.nvim",
+        dependencies = { "echasnovski/mini.icons" },
+        branch = "stable",
+        opts = {},
+        cmd = "Fyler",
     },
     {
         "nvim-telescope/telescope.nvim",
@@ -156,29 +190,5 @@ return {
         -- inspect panel for quickfix list
         "kevinhwang91/nvim-bqf",
         ft = "qf",
-    },
-    {
-        -- file manager
-        "stevearc/oil.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        opts = {
-            delete_to_trash = true,
-            view_options = {
-                show_hidden = true,
-            },
-            float = {
-                padding = 5,
-                win_options = {
-                    winblend = 5,
-                },
-            },
-            keymaps = {
-                ["<leader>-"] = "actions.close",
-            },
-        },
-        cmd = "Oil",
-        keys = {
-            { "<leader>-", "<CMD>Oil<CR>", mode = "n", desc = "Toggle oil file manager" },
-        },
-    },
+    }
 }
