@@ -31,7 +31,7 @@ return {
                 end
 
                 vim.schedule(function()
-                    require("auto-session").AutoRestoreSession()
+                    require("auto-session").auto_restore_session()
                 end)
             end
 

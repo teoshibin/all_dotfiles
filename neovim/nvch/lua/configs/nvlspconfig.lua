@@ -3,21 +3,21 @@ local M = {}
 local map = vim.keymap.set
 
 -- NOTE: copied and Modified from https://github.com/NvChad/ui/blob/v3.0/lua/nvchad/lsp/init.lua
-local diagnostic_config = function()
-  local x = vim.diagnostic.severity
-
-  vim.diagnostic.config {
-    virtual_text = false,
-    virtual_lines = true,
-    signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
-    underline = true,
-    float = { border = "single" },
-  }
-end
+-- local diagnostic_config = function()
+--   local x = vim.diagnostic.severity
+--
+--   vim.diagnostic.config {
+--     virtual_text = false,
+--     virtual_lines = true,
+--     signs = { text = { [x.ERROR] = "󰅙", [x.WARN] = "", [x.INFO] = "󰋼", [x.HINT] = "󰌵" } },
+--     underline = true,
+--     float = { border = "single" },
+--   }
+-- end
 
 -- export on_attach & capabilities
 M.on_attach = function(_, bufnr)
-  diagnostic_config()
+  -- diagnostic_config()
 
   local function opts(desc)
     return { buffer = bufnr, desc = "LSP " .. desc }
@@ -75,37 +75,76 @@ M.capabilities.textDocument.completion.completionItem = {
   },
 }
 
+-- M.defaults = function()
+--   dofile(vim.g.base46_cache .. "lsp")
+--
+--   -- NOTE: Modified, make diagnostic text single line and multi line on hover
+--   -- require("nvchad.lsp").diagnostic_config()
+--   diagnostic_config()
+--
+--   require("lspconfig").lua_ls.setup {
+--     on_attach = M.on_attach,
+--     capabilities = M.capabilities,
+--     on_init = M.on_init,
+--
+--     settings = {
+--       Lua = {
+--         diagnostics = {
+--           globals = { "vim" },
+--         },
+--         workspace = {
+--           library = {
+--             vim.fn.expand "$VIMRUNTIME/lua",
+--             vim.fn.expand "$VIMRUNTIME/lua/vim/lsp",
+--             vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
+--             vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
+--             "${3rd}/luv/library",
+--           },
+--           maxPreload = 100000,
+--           preloadFileSize = 10000,
+--         },
+--       },
+--     },
+--   }
+-- end
+
 M.defaults = function()
   dofile(vim.g.base46_cache .. "lsp")
+  require("nvchad.lsp").diagnostic_config()
 
-  -- NOTE: Modified, make diagnostic text single line and multi line on hover
-  -- require("nvchad.lsp").diagnostic_config()
-  diagnostic_config()
+  vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+      M.on_attach(_, args.buf)
+    end,
+  })
 
-  require("lspconfig").lua_ls.setup {
-    on_attach = M.on_attach,
-    capabilities = M.capabilities,
-    on_init = M.on_init,
-
-    settings = {
-      Lua = {
-        diagnostics = {
-          globals = { "vim" },
-        },
-        workspace = {
-          library = {
-            vim.fn.expand "$VIMRUNTIME/lua",
-            vim.fn.expand "$VIMRUNTIME/lua/vim/lsp",
-            vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
-            vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
-            "${3rd}/luv/library",
-          },
-          maxPreload = 100000,
-          preloadFileSize = 10000,
+  local lua_lsp_settings = {
+    Lua = {
+      runtime = { version = "LuaJIT" },
+      workspace = {
+        library = {
+          vim.fn.expand "$VIMRUNTIME/lua",
+          vim.fn.stdpath "data" .. "/lazy/ui/nvchad_types",
+          vim.fn.stdpath "data" .. "/lazy/lazy.nvim/lua/lazy",
+          "${3rd}/luv/library",
         },
       },
     },
   }
+
+  -- Support 0.10 temporarily
+
+  if vim.lsp.config then
+    vim.lsp.config("*", { capabilities = M.capabilities, on_init = M.on_init })
+    vim.lsp.config("lua_ls", { settings = lua_lsp_settings })
+    vim.lsp.enable "lua_ls"
+  else
+    require("lspconfig").lua_ls.setup {
+      capabilities = M.capabilities,
+      on_init = M.on_init,
+      settings = lua_lsp_settings,
+    }
+  end
 end
 
 return M

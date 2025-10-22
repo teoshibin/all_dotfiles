@@ -6,48 +6,66 @@ local on_attach = nvlsp.on_attach
 local on_init = nvlsp.on_init
 local capabilities = nvlsp.capabilities
 
-local lspconfig = require("lspconfig")
+-- local lspconfig = require("lspconfig")
 
-local function defaults(mods)
-    return vim.tbl_deep_extend("force", {
-        on_init = on_init,
-        on_attach = on_attach,
-        capabilities = capabilities,
-    }, mods)
-end
+-- local function defaults(mods)
+--     return vim.tbl_deep_extend("force", {
+--         on_init = on_init,
+--         on_attach = on_attach,
+--         capabilities = capabilities,
+--     }, mods)
+-- end
 
 -- Auto Configuration --
 
-local servers = {
-    "marksman", -- markdown
-    "ltex", -- grammar check
-    "jdtls", -- java
-    "basedpyright", -- python
-    "gdshader_lsp", -- TODO
-    "gopls",
-}
+vim.lsp.config("*", {
+  on_init = on_init,
+  capabilities = capabilities,
+})
 
-for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup(defaults({}))
-end
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(event) on_attach(nil, event.buf) end,
+})
 
-lspconfig.ltex.setup(defaults({
-    cmd = { vim.fn.stdpath("data") .. "/mason/bin/ltex-ls" },
-    settings = {
-        ltex = {
-            language = "en-GB",
-        },
-    },
-}))
+-- for _, lsp in ipairs(servers) do
+--     lspconfig[lsp].setup(defaults({}))
+-- end
+
+-- English --
+-- lspconfig.ltex.setup(defaults({
+--     cmd = { vim.fn.stdpath("data") .. "/mason/bin/ltex-ls" },
+--     settings = {
+--         ltex = {
+--             language = "en-GB",
+--         },
+--     },
+-- }))
+vim.lsp.config("ltex", {
+  cmd = { vim.fn.stdpath("data") .. "/mason/bin/ltex-ls" },
+  settings = { ltex = { language = "en-GB" } },
+})
+
+-- Markdown --
+vim.lsp.config("marksman", {})
+
+-- Java --
+vim.lsp.config("jdtls", {})
+
+-- Python --
+vim.lsp.config("basedpyright", {})
+
+-- GO --
+vim.lsp.config("gopls", {})
 
 -- Powershell --
-
-lspconfig.powershell_es.setup(defaults({
-    bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services/",
-}))
+-- lspconfig.powershell_es.setup(defaults({
+--     bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services/",
+-- }))
+vim.lsp.config("powershell_es", {
+  bundle_path = vim.fn.stdpath("data") .. "/mason/packages/powershell-editor-services/",
+})
 
 -- Old Kotlin --
-
 -- https://github.com/fwcd/kotlin-language-server
 -- https://github.com/neovim/nvim-lspconfig/blob/master/lua/lspconfig/server_configurations/kotlin_language_server.lua
 -- Doesn't update immediately after escape, sometimes require to escape multiple times for it to detect the changes
@@ -86,11 +104,28 @@ lspconfig.powershell_es.setup(defaults({
 -- }))
 
 -- GDScript --
-
+-- local port = os.getenv("GDScript_Port") or "6005"
+-- local nc_ex = require("custom.os").isWindows() and "ncat" or "nc"
+-- lspconfig.gdscript.setup(defaults({
+--     -- Note: install windows netcat: https://nmap.org/download.html
+--     cmd = { nc_ex, "localhost", port },
+-- }))
 local port = os.getenv("GDScript_Port") or "6005"
 local nc_ex = require("custom.os").isWindows() and "ncat" or "nc"
-lspconfig.gdscript.setup(defaults({
-    -- Note: install windows netcat: https://nmap.org/download.html
-    cmd = { nc_ex, "localhost", port },
-}))
+vim.lsp.config("gdscript", { cmd = { nc_ex, "localhost", port } })
+
+-- GDShadeer --
+vim.lsp.config("gdshader_lsp", {})
+
+-- Enable language servers
+local servers = {
+    "ltex",     -- grammar check
+    "marksman", -- markdown
+    "jdtls",    -- java
+    "basedpyright", -- python
+    "gopls",
+    "powershell_es",
+    "gdshader_lsp",
+}
+vim.lsp.enable(servers)
 
