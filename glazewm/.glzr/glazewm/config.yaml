@@ -120,6 +120,8 @@ window_rules:
 
   - commands: ["set-floating"]
     match:
+      # windows command palette
+      - window_title: { equals: 'Command Palette' }
       # Winspy
       - window_process: { equals: 'winspy' }
       # OBS
@@ -136,12 +138,15 @@ window_rules:
   - commands: ['ignore']
     match:
       # Games
+      - window_process: { regex: "bf6" }
+        window_class: { regex: '.*' }
       - window_process: { equals: 'BF2042' }
         window_class: { regex: '.*' }
       - window_process: { equals: 'Nier:Automata' }
         window_class: { regex: '.*' }
       - window_process: { equals: 'League of Legends.*' }
         window_class: { regex: '.*' }
+      - window_class: { regex: 'UnrealWindow' }
 
       # Ignores any Zebar windows.
       - window_process: { equals: 'zebar' }
