@@ -116,7 +116,7 @@ run = [
     alt-comma = 'layout accordion horizontal vertical'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
-    alt-h = 'focus --boundaries all-monitors-outer-frame left '
+    alt-h = 'focus --boundaries all-monitors-outer-frame left'
     alt-l = 'focus --boundaries all-monitors-outer-frame right'
     alt-k = 'focus --boundaries all-monitors-outer-frame up'
     alt-j = 'focus --boundaries all-monitors-outer-frame down'
@@ -142,6 +142,9 @@ run = [
     alt-8 = 'workspace 8'
     alt-9 = 'workspace 9'
     alt-0 = 'workspace 10'
+    # FIX: There is a bug where differnt windows of the same application will cause different monitors to be focused
+    # See https://github.com/nikitabobko/AeroSpace/issues/101
+    # Workaround: Mission Control > Display have different spaces (disable)
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
     alt-shift-1 = 'move-node-to-workspace 1'
