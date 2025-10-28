@@ -9,7 +9,12 @@ after-login-command = []
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
-after-startup-command = []
+# NOTE: MacOS window borders
+# brew tap FelixKratz/formulae
+# brew install borders
+after-startup-command = [
+    'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=4.0'
+]
 
 # Start AeroSpace at login
 start-at-login = true
@@ -57,12 +62,12 @@ automatically-unhide-macos-hidden-apps = false
 #                 See:
 #                 https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-    inner.horizontal = 4
-    inner.vertical =   4
-    outer.left =       4
-    outer.bottom =     4
-    outer.top =        4
-    outer.right =      4
+    inner.horizontal = 8
+    inner.vertical =   8
+    outer.left =       8
+    outer.bottom =     8
+    outer.top =        8
+    outer.right =      8
 
 [[on-window-detected]]
 if.app-id = "com.mitchellh.ghostty"
@@ -101,15 +106,13 @@ run = [
     # See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
     # You can uncomment the following lines to open up terminal with alt + enter shortcut
     # (like in i3)
-    # TODO: doesn't work
-    # alt-enter = '''exec-and-forget osascript -e '
-    # tell application "wezTerm"
-    #     do script
-    #     activate
-    # end tell'
-    # '''
-    alt-enter = 'exec-and-forget wezterm start'
-
+    alt-enter = '''exec-and-forget osascript -e '
+    tell application "WezTerm"
+        do shell script "wezterm start &"
+        delay 0.1
+        activate
+    end tell'
+    '''
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
     alt-slash = 'layout tiles horizontal vertical'
@@ -197,8 +200,8 @@ run = [
     alt-shift-j = ['join-with down', 'mode main']
     alt-shift-k = ['join-with up', 'mode main']
     alt-shift-l = ['join-with right', 'mode main']
+    alt-m = 'mode main'
     esc = 'mode main'
-    alt-g = 'mode main'
 
 [workspace-to-monitor-force-assignment]
     1 = 1
