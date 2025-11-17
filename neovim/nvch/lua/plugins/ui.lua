@@ -45,7 +45,7 @@ return {
         end,
     },
     {
-        enabled = false,
+        enabled = true,
         -- file manager
         "stevearc/oil.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -70,10 +70,15 @@ return {
         },
     },
     {
+        enabled = false,
         "A7Lavinraj/fyler.nvim",
         dependencies = { "echasnovski/mini.icons" },
         branch = "stable",
-        opts = {},
+        opts = {
+            views = {
+                enabled = true
+            }
+        },
         cmd = "Fyler",
     },
     {

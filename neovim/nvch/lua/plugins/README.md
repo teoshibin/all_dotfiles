@@ -3,6 +3,7 @@
 
 ## TODOs
 
+- flash a superjump https://github.com/folke/flash.nvim
 - auto resize ui, beauwilliams/focus.nvim
 - godot vim [plugin link](https://github.com/habamax/vim-godot)
 - git octo (PR)
