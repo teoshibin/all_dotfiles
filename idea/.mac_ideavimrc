@@ -125,12 +125,6 @@ nnoremap <leader>m :marks<Cr>
 " Delete marks
 nnoremap <leader>dm :delmarks a-zA-Z0-9<Cr>
 
-" Move Lines
-nnoremap <A-j> :m .+1<CR>==
-nnoremap <A-k> :m .-2<CR>==
-vnoremap <A-j> :m '>+1<CR>gv=gv
-vnoremap <A-k> :m '<-2<CR>gv=gv
-
 " Normal Mode New Line
 nnoremap <leader>o o<Esc>0"_D
 nnoremap <leader>O O<Esc>0"_D
@@ -210,7 +204,7 @@ nmap <leader>sa <Action>(FindInPath)
 nmap <leader>sb <Action>(Switcher)
 " Search Action
 nmap <leader>sk <Action>(GotoAction)
-" Search Classes
+" Search Classes Reference
 nmap <leader>sr <Action>(GotoClass)
 " Search Symbols
 nmap <leader>ss <Action>(GotoSymbol)
