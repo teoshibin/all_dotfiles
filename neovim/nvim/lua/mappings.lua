@@ -16,6 +16,12 @@ map("n", "<leader>.", "@@", { desc = "General Repeat last marco" })
 map("n", "[q", "<cmd>cprevious<CR>", { desc = "Quickfix Previous quickfix" })
 map("n", "]q", "<cmd>cnext<CR>", { desc = "Quickfix Next quickfix" })
 
+-- Navigate panes
+map("t", "<C-l>", "<C-\\><C-n><C-w><C-l>")
+map("t", "<C-h>", "<C-\\><C-n><C-w><C-h>")
+map("t", "<C-k>", "<C-\\><C-n><C-w><C-k>")
+map("t", "<C-j>", "<C-\\><C-n><C-w><C-j>")
+
 -- New Line
 map("n", "<leader>o", 'o<Esc>0"_D', { desc = "General Add newline below" })
 map("n", "<leader>O", 'O<Esc>0"_D', { desc = "General Add newline above" })

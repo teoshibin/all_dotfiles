@@ -8,7 +8,9 @@ opt.relativenumber = true
 opt.breakindent = true
 opt.undofile = true
 opt.smartcase = true
-opt.signcolumn = "yes"
+opt.number = true
+opt.relativenumber = true
+opt.signcolumn = "number"
 opt.timeoutlen = 350
 opt.cursorline = true
 opt.expandtab = true
@@ -19,4 +21,3 @@ opt.jumpoptions = "view"
 opt.colorcolumn = { 120 }
 opt.clipboard = "unnamedplus"
 opt.mouse = "a"
-

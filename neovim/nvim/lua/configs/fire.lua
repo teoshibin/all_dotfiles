@@ -7,13 +7,27 @@ if vim.g.started_by_firenvim == true then
 
     g.firenvim_config = {
         localSettings = {
-            [".*?leetcode.com.*"] = { takeover = "always" },
-            [".*"] = { takeover = "never" }
+            [".*?leetcode.com.*"] = { 
+                takeover = "always",
+                cmdline = "firenvim"
+            },
+            [".*"] = { 
+                takeover = "never",
+                cmdline = "firenvim"
+            }
         }
     }
-    g.firenvim_config.localSettings['.*'] = { cmdline = 'neovim' }
 
     api.nvim_set_keymap( "n", "<Esc><Esc>", "<Cmd>call firenvim#focus_page()<CR>", {})
     api.nvim_set_keymap( "n", "<C-z>", "<Cmd>call firenvim#hide_frame()<CR>", {})
+
+    vim.api.nvim_create_autocmd({'TextChanged', 'TextChangedI'}, {
+        nested = true,
+        command = "write"
+    })
+    vim.api.nvim_create_autocmd({'BufEnter'}, {
+        pattern = "leetcode.com_*.txt",
+        command = "set filetype=kotlin"
+    })
 end
 

@@ -1,27 +1,29 @@
 return {
-    {
-        enabled = true,
-        -- file manager
-        "stevearc/oil.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        opts = {
-            delete_to_trash = true,
-            view_options = {
-                show_hidden = true,
-            },
-            float = {
-                padding = 5,
-                win_options = {
-                    winblend = 5,
-                },
-            },
-            keymaps = {
-                ["<leader>-"] = "actions.close",
+    'stevearc/oil.nvim',
+    keys = {
+        { "-", "<cmd>Oil<cr>", desc = "Oil File Manager" }
+    },
+    ---@module 'oil'
+    ---@type oil.SetupOpts
+    opts = {
+        default_file_explorer = true,
+        delete_to_trash = true,
+        watch_for_changes = false,
+        view_options = {
+            show_hidden = true,
+        },
+        float = {
+            padding = 5,
+            win_options = {
+                winblend = 5,
             },
         },
-        cmd = "Oil",
-        keys = {
-            { "<leader>-", "<CMD>Oil<CR>", mode = "n", desc = "Toggle oil file manager" },
+        keymaps = {
+            ["-"] = { "actions.close", mode = "n" },
         },
-    }
+    },
+    dependencies = { 
+        { "nvim-mini/mini.icons", opts = {} } 
+    },
+    lazy = false
 }
