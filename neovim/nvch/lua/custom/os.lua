@@ -1,30 +1,32 @@
 local M = {}
 
 local uname = vim.loop.os_uname()
-local os = uname.sysname
-local isMac = os == "Darwin"
-local isLinux = os == "Linux"
-local isWindows = os:find("Windows") and true or false
-local isWSL = isLinux and uname.release:find("Microsoft") and true or false
+local sys = uname.sysname or ""
+local release = uname.release or ""
+
+local is_mac = sys == "Darwin"
+local is_linux = sys == "Linux"
+local is_windows = sys:match("Windows") ~= nil
+local is_wsl = is_linux and release:match("Microsoft") ~= nil
 
 function M.name()
-    return os
+    return sys
 end
 
 function M.isMac()
-    return isMac
+    return is_mac
 end
 
 function M.isLinux()
-    return isLinux
+    return is_linux
 end
 
 function M.isWindows()
-    return isWindows
+    return is_windows
 end
 
 function M.isWSL()
-    return isWSL
+    return is_wsl
 end
 
 return M
