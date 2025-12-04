@@ -61,7 +61,6 @@ local mappings = require("custom/mappings2")
 config.keys = mappings.keys
 config.key_tables = mappings.key_tables
 config.leader = mappings.leader
-mappings.register_events()
 
 -- Layout
 config.window_padding = {
@@ -69,6 +68,12 @@ config.window_padding = {
   right = '0.6cell',
   top = '0.4cell',
   bottom = '0.4cell',
+}
+
+-- Pane color
+config.inactive_pane_hsb = {
+  saturation = 0.8,
+  brightness = 0.5,
 }
 
 return config

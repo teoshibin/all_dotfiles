@@ -1,127 +1,180 @@
 local wezterm = require("wezterm")
-local platform = require("custom.platform") -- Your platform detection module
 local act = wezterm.action
+local platform = require("custom.platform") -- Your platform detection module
+local OS = platform.OS
 
 local M = {}
 
--- Leader key (consistent across platforms)
+-- leader
 M.leader = { key = "e", mods = "ALT", timeout_milliseconds = 1500 }
 
 -- Define modifier keys per platform
 local mods = {
-    -- Primary modifier (Ctrl on Windows/Linux, Cmd on Mac)
-    primary = platform.isMac() and "SUPER" or "CTRL",
-    -- Secondary modifier (usually with Shift)
-    secondary = platform.isMac() and "SHIFT|SUPER" or "SHIFT|CTRL",
-    -- Alternative modifier
-    alt = "ALT",
-    -- Leader modifier (consistent)
     leader = "LEADER",
+    leader_shift = "SHIFT|LEADER",
+    alt = "ALT",
+    cmd = "SUPER",
+    ctrl = "CTRL",
+    primary = platform.isWindows() and "CTRL" or "SUPER",
+    secondary = platform.isWindows() and "SHIFT|CTRL" or "SHIFT|SUPER",
 }
 
--- ========== COMMON KEYS (Cross-platform) ==========
-local common_keys = {
-    -- Navigation
-    { key = "d", mods = mods.leader, action = act.ActivateLastTab },
-    { key = "b", mods = mods.leader, action = act.ActivateTabRelative(-1) },
-    { key = "n", mods = mods.leader, action = act.ActivateTabRelative(1) },
-    { key = "Tab", mods = mods.primary, action = act.ActivateTabRelative(1) },
-    { key = "Tab", mods = mods.secondary, action = act.ActivateTabRelative(-1) },
+M.keys = {}
 
-    -- Pane navigation (ALT + vim keys)
-    { key = "h", mods = mods.alt, action = act.ActivatePaneDirection("Left") },
-    { key = "j", mods = mods.alt, action = act.ActivatePaneDirection("Down") },
-    { key = "k", mods = mods.alt, action = act.ActivatePaneDirection("Up") },
-    { key = "l", mods = mods.alt, action = act.ActivatePaneDirection("Right") },
-    { key = "p", mods = mods.alt, action = act.PaneSelect },
+local function map(key, modifier, action)
+    table.insert(M.keys, { key = key, mods = modifier, action = action })
+end
 
-    -- Arrow key pane navigation
-    { key = "LeftArrow", mods = mods.secondary, action = act.ActivatePaneDirection("Left") },
-    { key = "RightArrow", mods = mods.secondary, action = act.ActivatePaneDirection("Right") },
-    { key = "UpArrow", mods = mods.secondary, action = act.ActivatePaneDirection("Up") },
-    { key = "DownArrow", mods = mods.secondary, action = act.ActivatePaneDirection("Down") },
+---Map a key only on certain OS/OSes.
+---@alias OsEnum '"WINDOWS"'|'"MAC"'|'"LINUX"'|'"UNKNOWN"'
+---@param os_or_list OsEnum|OsEnum[]
+---@param key        string
+---@param modifier   string|nil
+---@param action     any
+local function osmap(os_or_list, key, modifier, action)
+    local current = platform.current()
+    -- scalar
+    if type(os_or_list) ~= "table" then
+        if current == os_or_list then
+            map(key, modifier, action)
+        end
+        return
+    end
+    -- list
+    for _, os in ipairs(os_or_list) do
+        if current == os then
+            map(key, modifier, action)
+            return
+        end
+    end
+end
 
-    -- Window/Tab/Pane Management
-    { key = "t", mods = mods.leader, action = act.SpawnTab("CurrentPaneDomain") },
-    { key = "v", mods = mods.leader, action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
-    { key = "s", mods = mods.leader, action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
-    { key = "x", mods = mods.leader, action = act.CloseCurrentPane({ confirm = true }) },
-    { key = "w", mods = mods.leader, action = act.CloseCurrentTab({ confirm = true }) },
-    { key = "w", mods = mods.primary, action = act.CloseCurrentTab({ confirm = true }) },
-    { key = "z", mods = mods.leader, action = act.TogglePaneZoomState },
+-- Navigation
 
-    -- Move current tab to specific positions
-    { key = '1', mods = 'LEADER|SHIFT', action = act.MoveTab(0) },
-    { key = '2', mods = 'LEADER|SHIFT', action = act.MoveTab(1) },
-    { key = '3', mods = 'LEADER|SHIFT', action = act.MoveTab(2) },
-    { key = '4', mods = 'LEADER|SHIFT', action = act.MoveTab(3) },
-    { key = '5', mods = 'LEADER|SHIFT', action = act.MoveTab(4) },
-    { key = '6', mods = 'LEADER|SHIFT', action = act.MoveTab(5) },
-    { key = '7', mods = 'LEADER|SHIFT', action = act.MoveTab(6) },
-    { key = '8', mods = 'LEADER|SHIFT', action = act.MoveTab(7) },
-    { key = '9', mods = 'LEADER|SHIFT', action = act.MoveTab(8) },
+-- leader d - go back tab
+map("d", mods.leader, act.ActivateLastTab)
+-- leader n - go next tab
+map("n", mods.leader, act.ActivateTabRelative(1))
+-- leader p - go previous tab
+map("p", mods.leader, act.ActivateTabRelative(-1))
+-- leader a - go all pane
+map("a", mods.leader, act.PaneSelect)
+-- leader h - go left pane
+map("h", mods.leader, act.ActivatePaneDirection("Left"))
+-- leader h - go right pane
+map("j", mods.leader, act.ActivatePaneDirection("Down"))
+-- leader k - go up pane
+map("k", mods.leader, act.ActivatePaneDirection("Up"))
+-- leader k - go down pane
+map("l", mods.leader, act.ActivatePaneDirection("Right"))
+-- leader t - new tab
+map("t", mods.leader, act.SpawnTab("CurrentPaneDomain"))
+-- leader v - new pane vertical split to the right
+map("v", mods.leader, act.SplitHorizontal({ domain = "CurrentPaneDomain" }))
+-- leader s - new pane horizontal split to the bottom
+map("s", mods.leader, act.SplitVertical({ domain = "CurrentPaneDomain" }))
+-- leader x - close pane
+map("x", mods.leader, act.CloseCurrentPane({ confirm = true }))
+-- leader w - close tab
+map("w", mods.leader, act.CloseCurrentTab({ confirm = true }))
+map("w", mods.primary, act.CloseCurrentTab({ confirm = true }))
 
-    -- Tools & Features
-    { key = "f", mods = mods.leader, action = act.Search("CurrentSelectionOrEmptyString") },
-    { key = "p", mods = mods.leader, action = act.ActivateCommandPalette },
-    { key = "r", mods = mods.leader, action = act.ReloadConfiguration },
-    { key = "l", mods = mods.leader, action = act.ShowDebugOverlay },
-    { key = "phys:Space", mods = mods.leader, action = act.QuickSelect },
-    {
-        key = "u",
-        mods = mods.leader,
-        action = act.CharSelect({ copy_on_select = true, copy_to = "ClipboardAndPrimarySelection" }),
-    },
+-- leader q - close window
+map("q", mods.leader, act.QuitApplication)
+map("q", mods.primary, act.QuitApplication)
 
-    -- Text Operations
-    { key = "c", mods = mods.secondary, action = act.CopyTo("Clipboard") },
-    { key = "c", mods = mods.primary, action = act.CopyTo("Clipboard") },
-    { key = "v", mods = mods.secondary, action = act.PasteFrom("Clipboard") },
-    { key = "v", mods = mods.primary, action = act.PasteFrom("Clipboard") },
-    { key = "k", mods = mods.secondary, action = act.ClearScrollback("ScrollbackOnly") },
-    { key = "k", mods = mods.primary, action = act.ClearScrollback("ScrollbackOnly") },
-    { key = "x", mods = mods.primary, action = act.ActivateCopyMode },
+-- leader z - toggle maximize pane
+map("z", mods.leader, act.TogglePaneZoomState)
 
-    -- Scrolling
-    { key = "y", mods = mods.primary, action = act.ScrollByLine(-1) },
-    { key = "e", mods = mods.primary, action = act.ScrollByLine(1) },
-    { key = "PageUp", mods = "SHIFT", action = act.ScrollByPage(-1) },
-    { key = "PageDown", mods = "SHIFT", action = act.ScrollByPage(1) },
+-- leader <n> - go to tab <n>
+map("1", mods.primary, act.ActivateTab(0))
+map("2", mods.primary, act.ActivateTab(1))
+map("3", mods.primary, act.ActivateTab(2))
+map("4", mods.primary, act.ActivateTab(3))
+map("5", mods.primary, act.ActivateTab(4))
+map("6", mods.primary, act.ActivateTab(5))
+map("7", mods.primary, act.ActivateTab(6))
+map("8", mods.primary, act.ActivateTab(7))
+map("9", mods.primary, act.ActivateTab(8))
 
-    -- Font Size
-    { key = "0", mods = mods.primary, action = act.ResetFontSize },
-    { key = "+", mods = mods.primary, action = act.IncreaseFontSize },
-    { key = "-", mods = mods.primary, action = act.DecreaseFontSize },
-    { key = "=", mods = mods.primary, action = act.IncreaseFontSize },
-    { key = "_", mods = mods.primary, action = act.DecreaseFontSize },
-    { key = "+", mods = mods.secondary, action = act.IncreaseFontSize },
-    { key = "-", mods = mods.secondary, action = act.DecreaseFontSize },
-    { key = "=", mods = mods.secondary, action = act.IncreaseFontSize },
-    { key = "_", mods = mods.secondary, action = act.DecreaseFontSize },
+-- leader ctrl <n> - move tab <n>
+map("1", mods.leader, act.MoveTab(0))
+map("2", mods.leader, act.MoveTab(1))
+map("3", mods.leader, act.MoveTab(2))
+map("4", mods.leader, act.MoveTab(3))
+map("5", mods.leader, act.MoveTab(4))
+map("6", mods.leader, act.MoveTab(5))
+map("7", mods.leader, act.MoveTab(6))
+map("8", mods.leader, act.MoveTab(7))
+map("9", mods.leader, act.MoveTab(8))
 
-    -- Page Navigation
-    { key = "PageUp", mods = mods.primary, action = act.ActivateTabRelative(-1) },
-    { key = "PageDown", mods = mods.primary, action = act.ActivateTabRelative(1) },
-    { key = "PageUp", mods = mods.secondary, action = act.MoveTabRelative(-1) },
-    { key = "PageDown", mods = mods.secondary, action = act.MoveTabRelative(1) },
+-- Editing
 
-    -- Pane Resizing
-    { key = "LeftArrow", mods = "SHIFT|ALT|CTRL", action = act.AdjustPaneSize({ "Left", 1 }) },
-    { key = "RightArrow", mods = "SHIFT|ALT|CTRL", action = act.AdjustPaneSize({ "Right", 1 }) },
-    { key = "UpArrow", mods = "SHIFT|ALT|CTRL", action = act.AdjustPaneSize({ "Up", 1 }) },
-    { key = "DownArrow", mods = "SHIFT|ALT|CTRL", action = act.AdjustPaneSize({ "Down", 1 }) },
+-- backspace a word
+osmap(OS.WINDOWS, "Backspace", "CTRL", act.SendString("\x17"))
+osmap({ OS.LINUX, OS.MAC }, "Backspace", "ALT", act.SendString("\x17"))
 
-    -- Clipboard Operations
-    { key = "Insert", mods = "SHIFT", action = act.PasteFrom("PrimarySelection") },
-    { key = "Insert", mods = mods.primary, action = act.CopyTo("PrimarySelection") },
-    { key = "Copy", mods = "NONE", action = act.CopyTo("Clipboard") },
-    { key = "Paste", mods = "NONE", action = act.PasteFrom("Clipboard") },
+-- backspace to line start
+osmap({ OS.LINUX, OS.MAC }, "Backspace", "SUPER", act.SendString("\x15"))
 
-    -- Toggle Opacity (Custom function)
-    {
-        key = "o",
-        mods = mods.leader,
-        action = wezterm.action_callback(function(window, _)
+-- Tools & Features
+map("f", mods.leader, act.Search("CurrentSelectionOrEmptyString"))
+map("p", mods.leader_shift, act.ActivateCommandPalette)
+map("r", mods.leader, act.ReloadConfiguration)
+map("-", mods.leader, act.ShowDebugOverlay)
+map("phys:Space", mods.leader, act.QuickSelect)
+map("u", mods.leader, act.CharSelect({ copy_on_select = true, copy_to = "ClipboardAndPrimarySelection" }))
+
+-- Text Operations
+map("c", mods.secondary, act.CopyTo("Clipboard"))
+map("c", mods.primary, act.CopyTo("Clipboard"))
+map("v", mods.secondary, act.PasteFrom("Clipboard"))
+map("v", mods.primary, act.PasteFrom("Clipboard"))
+map("k", mods.secondary, act.ClearScrollback("ScrollbackOnly"))
+map("k", mods.primary, act.ClearScrollback("ScrollbackOnly"))
+map("x", mods.primary, act.ActivateCopyMode)
+
+-- Scrolling
+map("y", mods.primary, act.ScrollByLine(-1))
+map("e", mods.primary, act.ScrollByLine(1))
+map("PageUp", "SHIFT", act.ScrollByPage(-1))
+map("PageDown", "SHIFT", act.ScrollByPage(1))
+
+-- Font Size
+map("0", mods.primary, act.ResetFontSize)
+map("+", mods.primary, act.IncreaseFontSize)
+map("-", mods.primary, act.DecreaseFontSize)
+map("=", mods.primary, act.IncreaseFontSize)
+map("_", mods.primary, act.DecreaseFontSize)
+map("+", mods.secondary, act.IncreaseFontSize)
+map("-", mods.secondary, act.DecreaseFontSize)
+map("=", mods.secondary, act.IncreaseFontSize)
+map("_", mods.secondary, act.DecreaseFontSize)
+
+-- Page Navigation
+map("PageUp", mods.primary, act.ActivateTabRelative(-1))
+map("PageDown", mods.primary, act.ActivateTabRelative(1))
+map("PageUp", mods.secondary, act.MoveTabRelative(-1))
+map("PageDown", mods.secondary, act.MoveTabRelative(1))
+
+-- Pane Resizing
+map("LeftArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Left", 1 }))
+map("RightArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Right", 1 }))
+map("UpArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Up", 1 }))
+map("DownArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Down", 1 }))
+
+-- Clipboard Operations
+map("Insert", "SHIFT", act.PasteFrom("PrimarySelection"))
+map("Insert", mods.primary, act.CopyTo("PrimarySelection"))
+map("Copy", "NONE", act.CopyTo("Clipboard"))
+map("Paste", "NONE", act.PasteFrom("Clipboard"))
+
+-- Toggle Opacity (Custom function)
+map(
+    "o",
+    mods.leader,
+    wezterm.action_callback(
+        function(window, _)
             local overrides = window:get_config_overrides() or {}
             if overrides.window_background_opacity == 1.0 then
                 overrides.window_background_opacity = 0.9
@@ -129,63 +182,10 @@ local common_keys = {
                 overrides.window_background_opacity = 1.0
             end
             window:set_config_overrides(overrides)
-        end),
-    },
-}
+        end
+    )
+)
 
--- ========== NUMBERED TABS ==========
-for i = 1, 9 do
-    table.insert(common_keys, {
-        key = tostring(i),
-        mods = mods.leader,
-        action = wezterm.action.ActivateTab(i - 1),
-    })
-end
-table.insert(common_keys, { key = "0", mods = mods.leader, action = act.ActivateTab(-1) })
-
--- ========== WINDOWS/LINUX SPECIFIC KEYS ==========
-local windows_keys = {
-    -- Delete word
-    { key = "Backspace", mods = "CTRL", action = act.SendString("\x17") },
-}
-
--- ========== MACOS SPECIFIC KEYS ==========
-local macos_keys = {
-    -- Delete operations
-    { key = "Backspace", mods = "SUPER", action = act.SendString("\x15") }, -- Delete line
-    { key = "Backspace", mods = "ALT", action = act.SendString("\x17") }, -- Delete word
-
-    -- Tab navigation with curly braces
-    { key = "{", mods = "SUPER", action = act.ActivateTabRelative(-1) },
-    { key = "{", mods = "SHIFT|SUPER", action = act.ActivateTabRelative(-1) },
-    { key = "}", mods = "SUPER", action = act.ActivateTabRelative(1) },
-    { key = "}", mods = "SHIFT|SUPER", action = act.ActivateTabRelative(1) },
-
-    -- Additional macOS-style font size controls
-    { key = "=", mods = "SUPER", action = act.IncreaseFontSize },
-    { key = "-", mods = "SUPER", action = act.DecreaseFontSize },
-}
-
--- ========== BUILD FINAL KEYS TABLE ==========
-M.keys = {}
-
--- Add common keys
-for _, key in ipairs(common_keys) do
-    table.insert(M.keys, key)
-end
-
--- Add platform-specific keys
-if platform.isMac() then
-    for _, key in ipairs(macos_keys) do
-        table.insert(M.keys, key)
-    end
-elseif platform.isWindows() or platform.isLinux() then
-    for _, key in ipairs(windows_keys) do
-        table.insert(M.keys, key)
-    end
-end
-
--- ========== KEY TABLES ==========
 M.key_tables = {
     copy_mode = {
         -- Movement
@@ -285,20 +285,18 @@ M.key_tables = {
     },
 }
 
--- Register event callbacks
-function M.register_events()
-    wezterm.on("update-right-status", function(window, _)
-        local prefix = ""
-        if window:leader_is_active() then
-            prefix = " " .. utf8.char(0x2605) .. " "
-        else
-            prefix = "   "
-        end
-        window:set_left_status(wezterm.format({
-            { Background = { Color = "#18181e" } },
-            { Text = prefix },
-        }))
-    end)
-end
+-- display leader
+wezterm.on("update-right-status", function(window, _)
+    local prefix = ""
+    if window:leader_is_active() then
+        prefix = " " .. utf8.char(0x2605) .. " "
+    else
+        prefix = "   "
+    end
+    window:set_left_status(wezterm.format({
+        { Background = { Color = "#18181e" } },
+        { Text = prefix },
+    }))
+end)
 
 return M
