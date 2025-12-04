@@ -1,100 +1,78 @@
+
+M = {}
+
 local wezterm = require("wezterm")
 local act = wezterm.action
-local platform = require("custom.platform") -- Your platform detection module
-local OS = platform.OS
 
-local M = {}
+local mapper = require("lib.mapper")
+local mods = mapper.mods
+local map = mapper.map
+local unixmap = mapper.unixmap
+local winmap = mapper.winmap
 
--- leader
-M.leader = { key = "e", mods = "ALT", timeout_milliseconds = 1500 }
-
--- Define modifier keys per platform
-local mods = {
-    leader = "LEADER",
-    leader_shift = "SHIFT|LEADER",
-    alt = "ALT",
-    cmd = "SUPER",
-    ctrl = "CTRL",
-    primary = platform.isWindows() and "CTRL" or "SUPER",
-    secondary = platform.isWindows() and "SHIFT|CTRL" or "SHIFT|SUPER",
-}
-
-M.keys = {}
-
-local function map(key, modifier, action)
-    table.insert(M.keys, { key = key, mods = modifier, action = action })
-end
-
----Map a key only on certain OS/OSes.
----@alias OsEnum '"WINDOWS"'|'"MAC"'|'"LINUX"'|'"UNKNOWN"'
----@param os_or_list OsEnum|OsEnum[]
----@param key        string
----@param modifier   string|nil
----@param action     any
-local function osmap(os_or_list, key, modifier, action)
-    local current = platform.current()
-    -- scalar
-    if type(os_or_list) ~= "table" then
-        if current == os_or_list then
-            map(key, modifier, action)
-        end
-        return
-    end
-    -- list
-    for _, os in ipairs(os_or_list) do
-        if current == os then
-            map(key, modifier, action)
-            return
-        end
-    end
-end
+M.leader = { key = "e", mods = mods.alt, timeout_milliseconds = 1500 }
+M.keys = mapper.keys
 
 -- Navigation
 
--- leader d - go back tab
+-- go back tab
 map("d", mods.leader, act.ActivateLastTab)
--- leader a - go all pane
-map("p", mods.primary, act.PaneSelect)
--- leader h - go left pane
+
+-- go all pane
+winmap("p", mods.ctrl_shift, act.PaneSelect)
+unixmap("p", mods.cmd, act.PaneSelect)
+
+-- go left pane
 map("h", mods.leader, act.ActivatePaneDirection("Left"))
--- leader h - go right pane
+
+-- go right pane
 map("j", mods.leader, act.ActivatePaneDirection("Down"))
--- leader k - go up pane
+
+-- go up pane
 map("k", mods.leader, act.ActivatePaneDirection("Up"))
--- leader k - go down pane
+
+-- go down pane
 map("l", mods.leader, act.ActivatePaneDirection("Right"))
--- leader t - new tab
+
+-- new tab
 map("t", mods.leader, act.SpawnTab("CurrentPaneDomain"))
-map("t", mods.primary, act.SpawnTab("CurrentPaneDomain"))
--- leader v - new pane vertical split to the right
+winmap("t", mods.ctrl, act.SpawnTab("CurrentPaneDomain"))
+unixmap("t", mods.cmd, act.SpawnTab("CurrentPaneDomain"))
+
+-- new pane vertical split to the right
 map("v", mods.leader, act.SplitHorizontal({ domain = "CurrentPaneDomain" }))
--- leader s - new pane horizontal split to the bottom
+
+-- new pane horizontal split to the bottom
 map("s", mods.leader, act.SplitVertical({ domain = "CurrentPaneDomain" }))
--- leader x - close pane
+
+-- close pane
 map("x", mods.leader, act.CloseCurrentPane({ confirm = true }))
--- leader w - close tab
+
+-- close tab
 map("w", mods.leader, act.CloseCurrentTab({ confirm = true }))
-map("w", mods.primary, act.CloseCurrentTab({ confirm = true }))
+winmap("w", mods.ctrl, act.CloseCurrentTab({ confirm = true }))
+unixmap("w", mods.cmd, act.CloseCurrentTab({ confirm = true }))
 
--- leader q - close window
+-- close window
 map("q", mods.leader, act.QuitApplication)
-map("q", mods.primary, act.QuitApplication)
+winmap("q", mods.ctrl, act.QuitApplication)
+unixmap("q", mods.cmd, act.QuitApplication)
 
--- leader z - toggle maximize pane
-map("z", mods.leader, act.TogglePaneZoomState)
+-- toggle maximize pane
+map("Enter", mods.leader, act.TogglePaneZoomState)
 
--- leader <n> - go to tab <n>
-map("1", mods.primary, act.ActivateTab(0))
-map("2", mods.primary, act.ActivateTab(1))
-map("3", mods.primary, act.ActivateTab(2))
-map("4", mods.primary, act.ActivateTab(3))
-map("5", mods.primary, act.ActivateTab(4))
-map("6", mods.primary, act.ActivateTab(5))
-map("7", mods.primary, act.ActivateTab(6))
-map("8", mods.primary, act.ActivateTab(7))
-map("9", mods.primary, act.ActivateTab(8))
+-- go to tab
+map("1", mods.ctrl, act.ActivateTab(0))
+map("2", mods.ctrl, act.ActivateTab(1))
+map("3", mods.ctrl, act.ActivateTab(2))
+map("4", mods.ctrl, act.ActivateTab(3))
+map("5", mods.ctrl, act.ActivateTab(4))
+map("6", mods.ctrl, act.ActivateTab(5))
+map("7", mods.ctrl, act.ActivateTab(6))
+map("8", mods.ctrl, act.ActivateTab(7))
+map("9", mods.ctrl, act.ActivateTab(8))
 
--- leader ctrl <n> - move tab <n>
+-- move tab
 map("1", mods.leader, act.MoveTab(0))
 map("2", mods.leader, act.MoveTab(1))
 map("3", mods.leader, act.MoveTab(2))
@@ -107,66 +85,101 @@ map("9", mods.leader, act.MoveTab(8))
 
 -- Editing
 
--- backspace a word
-osmap(OS.WINDOWS, "Backspace", mods.ctrl, act.SendString("\x17"))
-osmap({ OS.LINUX, OS.MAC }, "Backspace", mods.alt, act.SendString("\x17"))
+-- backspace word
+winmap("Backspace", mods.ctrl, act.SendString("\x17"))
+unixmap("Backspace", mods.alt, act.SendString("\x17"))
 
--- backspace to line start
-osmap({ OS.LINUX, OS.MAC }, "Backspace", mods.cmd, act.SendString("\x15"))
+-- backspace to start
+unixmap("Backspace", mods.cmd, act.SendString("\x15"))
 
--- Tools & Features
+-- copy
+winmap("c", mods.ctrl_shift, act.CopyTo("Clipboard"))
+unixmap("c", mods.cmd, act.CopyTo("Clipboard"))
+
+-- paste
+winmap("v", mods.ctrl_shift, act.PasteFrom("Clipboard"))
+unixmap("v", mods.cmd, act.PasteFrom("Clipboard"))
+
+-- search on cursor
 map("f", mods.leader, act.Search("CurrentSelectionOrEmptyString"))
-map("p", mods.secondary, act.ActivateCommandPalette)
+
+-- command palette
+map("p", mods.leader, act.ActivateCommandPalette)
+
+-- reload configuration
 map("r", mods.leader, act.ReloadConfiguration)
+
+-- show debug
 map("-", mods.leader, act.ShowDebugOverlay)
+
+-- cursor select with regex
 map("phys:Space", mods.leader, act.QuickSelect)
+
+-- emoji selector
 map("u", mods.leader, act.CharSelect({ copy_on_select = true, copy_to = "ClipboardAndPrimarySelection" }))
 
--- Text Operations
-map("c", mods.secondary, act.CopyTo("Clipboard"))
-map("c", mods.primary, act.CopyTo("Clipboard"))
-map("v", mods.secondary, act.PasteFrom("Clipboard"))
-map("v", mods.primary, act.PasteFrom("Clipboard"))
-map("k", mods.secondary, act.ClearScrollback("ScrollbackOnly"))
-map("k", mods.primary, act.ClearScrollback("ScrollbackOnly"))
-map("x", mods.primary, act.ActivateCopyMode)
+-- clear scrollback
+unixmap("k", mods.cmd, act.ClearScrollback("ScrollbackOnly"))
+winmap("k", mods.ctrl_shift, act.ClearScrollback("ScrollbackOnly"))
 
--- Scrolling
-map("y", mods.primary, act.ScrollByLine(-1))
-map("e", mods.primary, act.ScrollByLine(1))
-map("PageUp", "SHIFT", act.ScrollByPage(-1))
-map("PageDown", "SHIFT", act.ScrollByPage(1))
+-- copy mode
+winmap("x", mods.ctrl, act.ActivateCopyMode)
+unixmap("x", mods.cmd, act.ActivateCopyMode)
 
--- Font Size
--- map("0", mods.primary, act.ResetFontSize)
--- map("+", mods.primary, act.IncreaseFontSize)
--- map("-", mods.primary, act.DecreaseFontSize)
--- map("=", mods.primary, act.IncreaseFontSize)
--- map("_", mods.primary, act.DecreaseFontSize)
--- map("+", mods.secondary, act.IncreaseFontSize)
--- map("-", mods.secondary, act.DecreaseFontSize)
--- map("=", mods.secondary, act.IncreaseFontSize)
--- map("_", mods.secondary, act.DecreaseFontSize)
+-- scroll
+winmap("y", mods.ctrl, act.ScrollByLine(-1))
+unixmap("y", mods.cmd, act.ScrollByLine(-1))
+winmap("e", mods.ctrl, act.ScrollByLine(1))
+unixmap("e", mods.cmd, act.ScrollByLine(1))
+map("PageUp", mods.shift, act.ScrollByPage(-1))
+map("PageDown", mods.shift, act.ScrollByPage(1))
 
--- Page Navigation
-map("PageUp", mods.primary, act.ActivateTabRelative(-1))
-map("PageDown", mods.primary, act.ActivateTabRelative(1))
-map("PageUp", mods.secondary, act.MoveTabRelative(-1))
-map("PageDown", mods.secondary, act.MoveTabRelative(1))
+-- increase font size
+winmap("+", mods.ctrl, act.IncreaseFontSize)
+unixmap("+", mods.cmd, act.IncreaseFontSize)
 
--- Pane Resizing
+-- decrease font size
+winmap("-", mods.ctrl, act.DecreaseFontSize)
+unixmap("-", mods.cmd, act.DecreaseFontSize)
+
+-- reset font size
+winmap("0", mods.ctrl, act.ResetFontSize)
+unixmap("0", mods.cmd, act.ResetFontSize)
+
+-- focus previous tab
+winmap("PageUp", mods.ctrl, act.ActivateTabRelative(-1))
+unixmap("PageUp", mods.cmd, act.ActivateTabRelative(-1))
+
+-- focus next tab
+winmap("PageDown", mods.ctrl, act.ActivateTabRelative(1))
+unixmap("PageDown", mods.cmd, act.ActivateTabRelative(1))
+
+-- move to previous tab
+winmap("PageUp", mods.ctrl_shift, act.MoveTabRelative(-1))
+unixmap("PageUp", mods.cmd_shift, act.MoveTabRelative(-1))
+
+-- move to next tab
+winmap("PageDown", mods.ctrl_shift, act.MoveTabRelative(1))
+unixmap("PageDown", mods.cmd_shift, act.MoveTabRelative(1))
+
+-- resize left
 map("LeftArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Left", 1 }))
 map("RightArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Right", 1 }))
 map("UpArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Up", 1 }))
 map("DownArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Down", 1 }))
 
--- Clipboard Operations
-map("Insert", "SHIFT", act.PasteFrom("PrimarySelection"))
-map("Insert", mods.primary, act.CopyTo("PrimarySelection"))
+-- idk
+map("Insert", mods.shift, act.PasteFrom("PrimarySelection"))
+
+-- idk
+winmap("Insert", mods.ctrl, act.CopyTo("PrimarySelection"))
+unixmap("Insert", mods.cmd, act.CopyTo("PrimarySelection"))
+
+-- idk
 map("Copy", "NONE", act.CopyTo("Clipboard"))
 map("Paste", "NONE", act.PasteFrom("Clipboard"))
 
--- Toggle Opacity (Custom function)
+-- toggle opacity
 map(
     "o",
     mods.leader,
@@ -183,6 +196,7 @@ map(
     )
 )
 
+-- TODO: remove usage of primary and secondary
 M.key_tables = {
     copy_mode = {
         -- Movement
@@ -282,18 +296,24 @@ M.key_tables = {
     },
 }
 
--- display leader
-wezterm.on("update-right-status", function(window, _)
-    local prefix = ""
-    if window:leader_is_active() then
-        prefix = " " .. utf8.char(0x2605) .. " "
-    else
-        prefix = "   "
-    end
-    window:set_left_status(wezterm.format({
-        { Background = { Color = "#18181e" } },
-        { Text = prefix },
-    }))
-end)
+function M.apply(config)
+    config.leader = M.leader
+    config.keys = M.keys
+    config.key_tables = M.key_tables
+
+    -- display leader mode
+    wezterm.on("update-right-status", function(window, _)
+        local prefix = ""
+        if window:leader_is_active() then
+            prefix = " " .. utf8.char(0x2605) .. " "
+        else
+            prefix = "   "
+        end
+        window:set_left_status(wezterm.format({
+            { Background = { Color = "#18181e" } },
+            { Text = prefix },
+        }))
+    end)
+end
 
 return M
