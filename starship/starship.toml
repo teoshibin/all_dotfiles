@@ -21,6 +21,7 @@ $haskell\
 $python\
 [](fg:flamingo)\
 $cmd_duration\
+$status\
 $line_break\
 $character"""
 
@@ -169,6 +170,11 @@ format = " in $duration "
 style = "bg:lavender"
 show_notifications = true
 min_time_to_notify = 45000
+
+[status]
+format = " [$status]($style) "
+disabled = false
+map_symbol = false
 
 [palettes.catppuccin_mocha]
 rosewater = "#f5e0dc"
