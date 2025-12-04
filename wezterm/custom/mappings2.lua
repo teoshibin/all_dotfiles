@@ -53,12 +53,8 @@ end
 
 -- leader d - go back tab
 map("d", mods.leader, act.ActivateLastTab)
--- leader n - go next tab
-map("n", mods.leader, act.ActivateTabRelative(1))
--- leader p - go previous tab
-map("p", mods.leader, act.ActivateTabRelative(-1))
 -- leader a - go all pane
-map("a", mods.leader, act.PaneSelect)
+map("p", mods.primary, act.PaneSelect)
 -- leader h - go left pane
 map("h", mods.leader, act.ActivatePaneDirection("Left"))
 -- leader h - go right pane
@@ -69,6 +65,7 @@ map("k", mods.leader, act.ActivatePaneDirection("Up"))
 map("l", mods.leader, act.ActivatePaneDirection("Right"))
 -- leader t - new tab
 map("t", mods.leader, act.SpawnTab("CurrentPaneDomain"))
+map("t", mods.primary, act.SpawnTab("CurrentPaneDomain"))
 -- leader v - new pane vertical split to the right
 map("v", mods.leader, act.SplitHorizontal({ domain = "CurrentPaneDomain" }))
 -- leader s - new pane horizontal split to the bottom
@@ -111,15 +108,15 @@ map("9", mods.leader, act.MoveTab(8))
 -- Editing
 
 -- backspace a word
-osmap(OS.WINDOWS, "Backspace", "CTRL", act.SendString("\x17"))
-osmap({ OS.LINUX, OS.MAC }, "Backspace", "ALT", act.SendString("\x17"))
+osmap(OS.WINDOWS, "Backspace", mods.ctrl, act.SendString("\x17"))
+osmap({ OS.LINUX, OS.MAC }, "Backspace", mods.alt, act.SendString("\x17"))
 
 -- backspace to line start
-osmap({ OS.LINUX, OS.MAC }, "Backspace", "SUPER", act.SendString("\x15"))
+osmap({ OS.LINUX, OS.MAC }, "Backspace", mods.cmd, act.SendString("\x15"))
 
 -- Tools & Features
 map("f", mods.leader, act.Search("CurrentSelectionOrEmptyString"))
-map("p", mods.leader_shift, act.ActivateCommandPalette)
+map("p", mods.secondary, act.ActivateCommandPalette)
 map("r", mods.leader, act.ReloadConfiguration)
 map("-", mods.leader, act.ShowDebugOverlay)
 map("phys:Space", mods.leader, act.QuickSelect)
@@ -141,15 +138,15 @@ map("PageUp", "SHIFT", act.ScrollByPage(-1))
 map("PageDown", "SHIFT", act.ScrollByPage(1))
 
 -- Font Size
-map("0", mods.primary, act.ResetFontSize)
-map("+", mods.primary, act.IncreaseFontSize)
-map("-", mods.primary, act.DecreaseFontSize)
-map("=", mods.primary, act.IncreaseFontSize)
-map("_", mods.primary, act.DecreaseFontSize)
-map("+", mods.secondary, act.IncreaseFontSize)
-map("-", mods.secondary, act.DecreaseFontSize)
-map("=", mods.secondary, act.IncreaseFontSize)
-map("_", mods.secondary, act.DecreaseFontSize)
+-- map("0", mods.primary, act.ResetFontSize)
+-- map("+", mods.primary, act.IncreaseFontSize)
+-- map("-", mods.primary, act.DecreaseFontSize)
+-- map("=", mods.primary, act.IncreaseFontSize)
+-- map("_", mods.primary, act.DecreaseFontSize)
+-- map("+", mods.secondary, act.IncreaseFontSize)
+-- map("-", mods.secondary, act.DecreaseFontSize)
+-- map("=", mods.secondary, act.IncreaseFontSize)
+-- map("_", mods.secondary, act.DecreaseFontSize)
 
 -- Page Navigation
 map("PageUp", mods.primary, act.ActivateTabRelative(-1))
