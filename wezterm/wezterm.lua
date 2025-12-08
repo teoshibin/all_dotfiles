@@ -1,7 +1,7 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
-require("mappings").apply(config)
-require("options").apply(config)
+require("mappings").configure(config)
+require("options").configure(config)
 
 return config
