@@ -4,7 +4,7 @@ M = {}
 local wezterm = require("wezterm")
 local platform = require("lib.platform")
 
-function M.apply(config)
+function M.configure(config)
     config.automatically_reload_config = false
     config.max_fps = 120
     config.audible_bell = "Disabled"

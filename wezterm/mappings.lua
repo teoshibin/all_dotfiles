@@ -62,15 +62,24 @@ unixmap("q", mods.cmd, act.QuitApplication)
 map("Enter", mods.leader, act.TogglePaneZoomState)
 
 -- go to tab
-map("1", mods.ctrl, act.ActivateTab(0))
-map("2", mods.ctrl, act.ActivateTab(1))
-map("3", mods.ctrl, act.ActivateTab(2))
-map("4", mods.ctrl, act.ActivateTab(3))
-map("5", mods.ctrl, act.ActivateTab(4))
-map("6", mods.ctrl, act.ActivateTab(5))
-map("7", mods.ctrl, act.ActivateTab(6))
-map("8", mods.ctrl, act.ActivateTab(7))
-map("9", mods.ctrl, act.ActivateTab(8))
+winmap("1", mods.ctrl, act.ActivateTab(0))
+winmap("2", mods.ctrl, act.ActivateTab(1))
+winmap("3", mods.ctrl, act.ActivateTab(2))
+winmap("4", mods.ctrl, act.ActivateTab(3))
+winmap("5", mods.ctrl, act.ActivateTab(4))
+winmap("6", mods.ctrl, act.ActivateTab(5))
+winmap("7", mods.ctrl, act.ActivateTab(6))
+winmap("8", mods.ctrl, act.ActivateTab(7))
+winmap("9", mods.ctrl, act.ActivateTab(8))
+unixmap("1", mods.cmd, act.ActivateTab(0))
+unixmap("2", mods.cmd, act.ActivateTab(1))
+unixmap("3", mods.cmd, act.ActivateTab(2))
+unixmap("4", mods.cmd, act.ActivateTab(3))
+unixmap("5", mods.cmd, act.ActivateTab(4))
+unixmap("6", mods.cmd, act.ActivateTab(5))
+unixmap("7", mods.cmd, act.ActivateTab(6))
+unixmap("8", mods.cmd, act.ActivateTab(7))
+unixmap("9", mods.cmd, act.ActivateTab(8))
 
 -- move tab
 map("1", mods.leader, act.MoveTab(0))
@@ -296,7 +305,7 @@ M.key_tables = {
     },
 }
 
-function M.apply(config)
+function M.configure(config)
     config.leader = M.leader
     config.keys = M.keys
     config.key_tables = M.key_tables
