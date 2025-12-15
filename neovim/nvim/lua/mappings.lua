@@ -8,7 +8,8 @@ end
 
 -- Escape
 map("i", "jj", "<Esc>", { desc = "Quick Escape" })
-map("n", "<Esc><Esc>", "<Esc><Cmd>nohl<CR>", { desc = "Clear highlight" })
+-- causing telescope ages to close
+-- map("n", "<Esc><Esc>", "<Esc><Cmd>nohl<CR>", { desc = "Clear highlight" })
 
 -- Repeat Command
 map("n", "<leader>.", "@@", { desc = "General Repeat last marco" })
