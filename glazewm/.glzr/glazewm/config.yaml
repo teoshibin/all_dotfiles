@@ -117,6 +117,9 @@ window_rules:
   - commands: ["move --workspace 1"]
     match:
       - window_process: { equals: 'Discord' }
+  - commands: ["move --workspace 6"]
+    match:
+      - window_process: { equals: 'Obsidian' }
 
   - commands: ["set-floating"]
     match:
