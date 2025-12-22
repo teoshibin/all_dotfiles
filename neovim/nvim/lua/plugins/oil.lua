@@ -1,7 +1,7 @@
 return {
     'stevearc/oil.nvim',
     keys = {
-        { "-", "<cmd>Oil<cr>", desc = "Oil File Manager" }
+        { "-", "<cmd>lua require('oil').toggle_float()<CR>", desc = "Oil File Manager" }
     },
     ---@module 'oil'
     ---@type oil.SetupOpts

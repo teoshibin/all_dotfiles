@@ -8,8 +8,11 @@ end
 
 -- Escape
 map("i", "jj", "<Esc>", { desc = "Quick Escape" })
--- causing telescope ages to close
--- map("n", "<Esc><Esc>", "<Esc><Cmd>nohl<CR>", { desc = "Clear highlight" })
+map(
+    "n", "<Esc>",
+    function() return (vim.v.hlsearch == 1) and "<Cmd>nohlsearch<CR><Esc>" or "<Esc>" end,
+    { expr = true, silent = true, replace_keycodes = true, desc = "No hightlight and escape" }
+)
 
 -- Repeat Command
 map("n", "<leader>.", "@@", { desc = "General Repeat last marco" })
@@ -23,6 +26,10 @@ map("t", "<C-l>", "<C-\\><C-n><C-w><C-l>")
 map("t", "<C-h>", "<C-\\><C-n><C-w><C-h>")
 map("t", "<C-k>", "<C-\\><C-n><C-w><C-k>")
 map("t", "<C-j>", "<C-\\><C-n><C-w><C-j>")
+map("n", "<C-l>", "<C-w><C-l>")
+map("n", "<C-h>", "<C-w><C-h>")
+map("n", "<C-k>", "<C-w><C-k>")
+map("n", "<C-j>", "<C-w><C-j>")
 
 -- New Line
 map("n", "<leader>o", 'o<Esc>0"_D', { desc = "General Add newline below" })
