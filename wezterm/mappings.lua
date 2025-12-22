@@ -3,211 +3,227 @@ M = {}
 
 local wezterm = require("wezterm")
 local act = wezterm.action
+local Mapper = require("lib.mapper")
+local mods = Mapper.mods
 
-local mapper = require("lib.mapper")
-local mods = mapper.mods
-local map = mapper.map
-local unixmap = mapper.unixmap
-local winmap = mapper.winmap
+-- Configure leader key
+local function leader()
+    return { key = "e", mods = mods.alt, timeout_milliseconds = 1500 }
+end
 
-M.leader = { key = "e", mods = mods.alt, timeout_milliseconds = 1500 }
-M.keys = mapper.keys
+-- Configure general keys
+local function key()
+    local mapper  = Mapper.new()
+    local map     = mapper.map
+    local unixmap = mapper.unixmap
+    local winmap  = mapper.winmap
 
--- Navigation
+    -- Navigation
 
--- go back tab
-map("d", mods.leader, act.ActivateLastTab)
+    -- go back tab
+    winmap("d", mods.ctrl_shift, act.ActivateLastTab)
+    unixmap("d", mods.cmd, act.ActivateLastTab)
 
--- go all pane
-winmap("p", mods.ctrl_shift, act.PaneSelect)
-unixmap("p", mods.cmd, act.PaneSelect)
+    -- go all pane
+    winmap("p", mods.ctrl_shift, act.PaneSelect)
+    unixmap("p", mods.cmd, act.PaneSelect)
 
--- go left pane
-map("h", mods.leader, act.ActivatePaneDirection("Left"))
+    -- go left pane
+    map("h", mods.leader, act.ActivatePaneDirection("Left"))
 
--- go right pane
-map("j", mods.leader, act.ActivatePaneDirection("Down"))
+    -- go right pane
+    map("j", mods.leader, act.ActivatePaneDirection("Down"))
 
--- go up pane
-map("k", mods.leader, act.ActivatePaneDirection("Up"))
+    -- go up pane
+    map("k", mods.leader, act.ActivatePaneDirection("Up"))
 
--- go down pane
-map("l", mods.leader, act.ActivatePaneDirection("Right"))
+    -- go down pane
+    map("l", mods.leader, act.ActivatePaneDirection("Right"))
 
--- new tab
-map("t", mods.leader, act.SpawnTab("CurrentPaneDomain"))
-winmap("t", mods.ctrl, act.SpawnTab("CurrentPaneDomain"))
-unixmap("t", mods.cmd, act.SpawnTab("CurrentPaneDomain"))
+    -- new tab
+    map("t", mods.leader, act.SpawnTab("CurrentPaneDomain"))
+    winmap("t", mods.ctrl, act.SpawnTab("CurrentPaneDomain"))
+    unixmap("t", mods.cmd, act.SpawnTab("CurrentPaneDomain"))
 
--- new pane vertical split to the right
-map("v", mods.leader, act.SplitHorizontal({ domain = "CurrentPaneDomain" }))
+    -- new pane vertical split to the right
+    map("v", mods.leader, act.SplitHorizontal({ domain = "CurrentPaneDomain" }))
 
--- new pane horizontal split to the bottom
-map("s", mods.leader, act.SplitVertical({ domain = "CurrentPaneDomain" }))
+    -- new pane horizontal split to the bottom
+    map("s", mods.leader, act.SplitVertical({ domain = "CurrentPaneDomain" }))
 
--- close pane
-map("x", mods.leader, act.CloseCurrentPane({ confirm = true }))
+    -- close pane
+    map("x", mods.leader, act.CloseCurrentPane({ confirm = true }))
 
--- close tab
-map("w", mods.leader, act.CloseCurrentTab({ confirm = true }))
-winmap("w", mods.ctrl, act.CloseCurrentTab({ confirm = true }))
-unixmap("w", mods.cmd, act.CloseCurrentTab({ confirm = true }))
+    -- close tab
+    map("w", mods.leader, act.CloseCurrentTab({ confirm = true }))
+    winmap("w", mods.ctrl, act.CloseCurrentTab({ confirm = true }))
+    unixmap("w", mods.cmd, act.CloseCurrentTab({ confirm = true }))
 
--- close window
-map("q", mods.leader, act.QuitApplication)
-winmap("q", mods.ctrl, act.QuitApplication)
-unixmap("q", mods.cmd, act.QuitApplication)
+    -- close window
+    map("q", mods.leader, act.QuitApplication)
+    winmap("q", mods.ctrl, act.QuitApplication)
+    unixmap("q", mods.cmd, act.QuitApplication)
 
--- toggle maximize pane
-map("Enter", mods.leader, act.TogglePaneZoomState)
+    -- toggle maximize pane
+    map("Enter", mods.leader, act.TogglePaneZoomState)
 
--- go to tab
-winmap("1", mods.ctrl, act.ActivateTab(0))
-winmap("2", mods.ctrl, act.ActivateTab(1))
-winmap("3", mods.ctrl, act.ActivateTab(2))
-winmap("4", mods.ctrl, act.ActivateTab(3))
-winmap("5", mods.ctrl, act.ActivateTab(4))
-winmap("6", mods.ctrl, act.ActivateTab(5))
-winmap("7", mods.ctrl, act.ActivateTab(6))
-winmap("8", mods.ctrl, act.ActivateTab(7))
-winmap("9", mods.ctrl, act.ActivateTab(8))
-unixmap("1", mods.cmd, act.ActivateTab(0))
-unixmap("2", mods.cmd, act.ActivateTab(1))
-unixmap("3", mods.cmd, act.ActivateTab(2))
-unixmap("4", mods.cmd, act.ActivateTab(3))
-unixmap("5", mods.cmd, act.ActivateTab(4))
-unixmap("6", mods.cmd, act.ActivateTab(5))
-unixmap("7", mods.cmd, act.ActivateTab(6))
-unixmap("8", mods.cmd, act.ActivateTab(7))
-unixmap("9", mods.cmd, act.ActivateTab(8))
+    -- go to tab
+    winmap("1", mods.ctrl, act.ActivateTab(0))
+    winmap("2", mods.ctrl, act.ActivateTab(1))
+    winmap("3", mods.ctrl, act.ActivateTab(2))
+    winmap("4", mods.ctrl, act.ActivateTab(3))
+    winmap("5", mods.ctrl, act.ActivateTab(4))
+    winmap("6", mods.ctrl, act.ActivateTab(5))
+    winmap("7", mods.ctrl, act.ActivateTab(6))
+    winmap("8", mods.ctrl, act.ActivateTab(7))
+    winmap("9", mods.ctrl, act.ActivateTab(8))
+    unixmap("1", mods.cmd, act.ActivateTab(0))
+    unixmap("2", mods.cmd, act.ActivateTab(1))
+    unixmap("3", mods.cmd, act.ActivateTab(2))
+    unixmap("4", mods.cmd, act.ActivateTab(3))
+    unixmap("5", mods.cmd, act.ActivateTab(4))
+    unixmap("6", mods.cmd, act.ActivateTab(5))
+    unixmap("7", mods.cmd, act.ActivateTab(6))
+    unixmap("8", mods.cmd, act.ActivateTab(7))
+    unixmap("9", mods.cmd, act.ActivateTab(8))
 
--- move tab
-map("1", mods.leader, act.MoveTab(0))
-map("2", mods.leader, act.MoveTab(1))
-map("3", mods.leader, act.MoveTab(2))
-map("4", mods.leader, act.MoveTab(3))
-map("5", mods.leader, act.MoveTab(4))
-map("6", mods.leader, act.MoveTab(5))
-map("7", mods.leader, act.MoveTab(6))
-map("8", mods.leader, act.MoveTab(7))
-map("9", mods.leader, act.MoveTab(8))
+    -- move tab
+    map("1", mods.leader, act.MoveTab(0))
+    map("2", mods.leader, act.MoveTab(1))
+    map("3", mods.leader, act.MoveTab(2))
+    map("4", mods.leader, act.MoveTab(3))
+    map("5", mods.leader, act.MoveTab(4))
+    map("6", mods.leader, act.MoveTab(5))
+    map("7", mods.leader, act.MoveTab(6))
+    map("8", mods.leader, act.MoveTab(7))
+    map("9", mods.leader, act.MoveTab(8))
 
--- Editing
+    -- Editing
 
--- backspace word
-winmap("Backspace", mods.ctrl, act.SendString("\x17"))
-unixmap("Backspace", mods.alt, act.SendString("\x17"))
+    -- backspace word
+    winmap("Backspace", mods.ctrl, act.SendString("\x17"))
+    unixmap("Backspace", mods.alt, act.SendString("\x17"))
 
--- backspace to start
-unixmap("Backspace", mods.cmd, act.SendString("\x15"))
+    -- backspace to start
+    unixmap("Backspace", mods.cmd, act.SendString("\x15"))
 
--- copy
-winmap("c", mods.ctrl_shift, act.CopyTo("Clipboard"))
-unixmap("c", mods.cmd, act.CopyTo("Clipboard"))
+    -- copy
+    winmap("c", mods.ctrl_shift, act.CopyTo("Clipboard"))
+    unixmap("c", mods.cmd, act.CopyTo("Clipboard"))
 
--- paste
-winmap("v", mods.ctrl_shift, act.PasteFrom("Clipboard"))
-unixmap("v", mods.cmd, act.PasteFrom("Clipboard"))
+    -- paste
+    winmap("v", mods.ctrl_shift, act.PasteFrom("Clipboard"))
+    unixmap("v", mods.cmd, act.PasteFrom("Clipboard"))
 
--- search on cursor
-map("f", mods.leader, act.Search("CurrentSelectionOrEmptyString"))
+    -- search on cursor
+    map("f", mods.leader, act.Search("CurrentSelectionOrEmptyString"))
+    winmap("f", mods.ctrl_shift, act.Search("CurrentSelectionOrEmptyString"))
+    unixmap("f", mods.cmd, act.Search("CurrentSelectionOrEmptyString"))
 
--- command palette
-map("p", mods.leader, act.ActivateCommandPalette)
+    -- command palette
+    map("p", mods.leader, act.ActivateCommandPalette)
 
--- reload configuration
-map("r", mods.leader, act.ReloadConfiguration)
+    -- reload configuration
+    map("r", mods.leader, act.ReloadConfiguration)
 
--- show debug
-map("-", mods.leader, act.ShowDebugOverlay)
+    -- show debug
+    map("-", mods.leader, act.ShowDebugOverlay)
 
--- cursor select with regex
-map("phys:Space", mods.leader, act.QuickSelect)
+    -- cursor select with regex
+    map("phys:Space", mods.leader, act.QuickSelect)
 
--- emoji selector
-map("u", mods.leader, act.CharSelect({ copy_on_select = true, copy_to = "ClipboardAndPrimarySelection" }))
+    -- emoji selector
+    map("u", mods.leader, act.CharSelect({ copy_on_select = true, copy_to = "ClipboardAndPrimarySelection" }))
 
--- clear scrollback
-unixmap("k", mods.cmd, act.ClearScrollback("ScrollbackOnly"))
-winmap("k", mods.ctrl_shift, act.ClearScrollback("ScrollbackOnly"))
+    -- clear scrollback
+    unixmap("k", mods.cmd, act.ClearScrollback("ScrollbackOnly"))
+    winmap("k", mods.ctrl_shift, act.ClearScrollback("ScrollbackOnly"))
 
--- copy mode
-winmap("x", mods.ctrl, act.ActivateCopyMode)
-unixmap("x", mods.cmd, act.ActivateCopyMode)
+    -- copy mode
+    winmap("x", mods.ctrl, act.ActivateCopyMode)
+    unixmap("x", mods.cmd, act.ActivateCopyMode)
 
--- scroll
-winmap("y", mods.ctrl, act.ScrollByLine(-1))
-unixmap("y", mods.cmd, act.ScrollByLine(-1))
-winmap("e", mods.ctrl, act.ScrollByLine(1))
-unixmap("e", mods.cmd, act.ScrollByLine(1))
-map("PageUp", mods.shift, act.ScrollByPage(-1))
-map("PageDown", mods.shift, act.ScrollByPage(1))
+    -- scroll
+    winmap("y", mods.ctrl, act.ScrollByLine(-1))
+    unixmap("y", mods.cmd, act.ScrollByLine(-1))
+    winmap("e", mods.ctrl, act.ScrollByLine(1))
+    unixmap("e", mods.cmd, act.ScrollByLine(1))
+    map("PageUp", mods.shift, act.ScrollByPage(-1))
+    map("PageDown", mods.shift, act.ScrollByPage(1))
 
--- increase font size
-winmap("+", mods.ctrl, act.IncreaseFontSize)
-unixmap("+", mods.cmd, act.IncreaseFontSize)
+    -- increase font size
+    winmap("+", mods.ctrl, act.IncreaseFontSize)
+    unixmap("+", mods.cmd, act.IncreaseFontSize)
 
--- decrease font size
-winmap("-", mods.ctrl, act.DecreaseFontSize)
-unixmap("-", mods.cmd, act.DecreaseFontSize)
+    -- decrease font size
+    winmap("-", mods.ctrl, act.DecreaseFontSize)
+    unixmap("-", mods.cmd, act.DecreaseFontSize)
 
--- reset font size
-winmap("0", mods.ctrl, act.ResetFontSize)
-unixmap("0", mods.cmd, act.ResetFontSize)
+    -- reset font size
+    winmap("0", mods.ctrl, act.ResetFontSize)
+    unixmap("0", mods.cmd, act.ResetFontSize)
 
--- focus previous tab
-winmap("PageUp", mods.ctrl, act.ActivateTabRelative(-1))
-unixmap("PageUp", mods.cmd, act.ActivateTabRelative(-1))
+    -- focus previous tab
+    winmap("PageUp", mods.ctrl, act.ActivateTabRelative(-1))
+    unixmap("PageUp", mods.cmd, act.ActivateTabRelative(-1))
 
--- focus next tab
-winmap("PageDown", mods.ctrl, act.ActivateTabRelative(1))
-unixmap("PageDown", mods.cmd, act.ActivateTabRelative(1))
+    -- focus next tab
+    winmap("PageDown", mods.ctrl, act.ActivateTabRelative(1))
+    unixmap("PageDown", mods.cmd, act.ActivateTabRelative(1))
 
--- move to previous tab
-winmap("PageUp", mods.ctrl_shift, act.MoveTabRelative(-1))
-unixmap("PageUp", mods.cmd_shift, act.MoveTabRelative(-1))
+    -- move to previous tab
+    winmap("PageUp", mods.ctrl_shift, act.MoveTabRelative(-1))
+    unixmap("PageUp", mods.cmd_shift, act.MoveTabRelative(-1))
 
--- move to next tab
-winmap("PageDown", mods.ctrl_shift, act.MoveTabRelative(1))
-unixmap("PageDown", mods.cmd_shift, act.MoveTabRelative(1))
+    -- move to next tab
+    winmap("PageDown", mods.ctrl_shift, act.MoveTabRelative(1))
+    unixmap("PageDown", mods.cmd_shift, act.MoveTabRelative(1))
 
--- resize left
-map("LeftArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Left", 1 }))
-map("RightArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Right", 1 }))
-map("UpArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Up", 1 }))
-map("DownArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Down", 1 }))
+    -- resize left
+    map("LeftArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Left", 1 }))
+    map("RightArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Right", 1 }))
+    map("UpArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Up", 1 }))
+    map("DownArrow", "SHIFT|ALT|CTRL", act.AdjustPaneSize({ "Down", 1 }))
 
--- idk
-map("Insert", mods.shift, act.PasteFrom("PrimarySelection"))
+    -- idk
+    map("Insert", mods.shift, act.PasteFrom("PrimarySelection"))
 
--- idk
-winmap("Insert", mods.ctrl, act.CopyTo("PrimarySelection"))
-unixmap("Insert", mods.cmd, act.CopyTo("PrimarySelection"))
+    -- idk
+    winmap("Insert", mods.ctrl, act.CopyTo("PrimarySelection"))
+    unixmap("Insert", mods.cmd, act.CopyTo("PrimarySelection"))
 
--- idk
-map("Copy", "NONE", act.CopyTo("Clipboard"))
-map("Paste", "NONE", act.PasteFrom("Clipboard"))
+    -- idk
+    map("Copy", "NONE", act.CopyTo("Clipboard"))
+    map("Paste", "NONE", act.PasteFrom("Clipboard"))
 
--- toggle opacity
-map(
-    "o",
-    mods.leader,
-    wezterm.action_callback(
-        function(window, _)
-            local overrides = window:get_config_overrides() or {}
-            if overrides.window_background_opacity == 1.0 then
-                overrides.window_background_opacity = 0.9
-            else
-                overrides.window_background_opacity = 1.0
+    -- toggle opacity
+    map(
+        "o",
+        mods.leader,
+        wezterm.action_callback(
+            function(window, _)
+                local overrides = window:get_config_overrides() or {}
+                if overrides.window_background_opacity == 1.0 then
+                    overrides.window_background_opacity = 0.9
+                else
+                    overrides.window_background_opacity = 1.0
+                end
+                window:set_config_overrides(overrides)
             end
-            window:set_config_overrides(overrides)
-        end
+        )
     )
-)
 
--- TODO: remove usage of primary and secondary
-M.key_tables = {
-    copy_mode = {
+    return mapper.keys
+end
+
+-- Configure copy mode keys
+local function copyMode()
+    local mapper  = Mapper.new()
+    local map     = mapper.map
+    local unixmap = mapper.unixmap
+    local winmap  = mapper.winmap
+
+    return {
         -- Movement
         { key = "h", mods = "NONE", action = act.CopyMode("MoveLeft") },
         { key = "j", mods = "NONE", action = act.CopyMode("MoveDown") },
@@ -289,9 +305,17 @@ M.key_tables = {
         { key = "T", mods = "SHIFT", action = act.CopyMode({ JumpBackward = { prev_char = true } }) },
         { key = "V", mods = "SHIFT", action = act.CopyMode({ SetSelectionMode = "Line" }) },
         { key = "^", mods = "SHIFT", action = act.CopyMode("MoveToStartOfLineContent") },
-    },
+    }
+end
 
-    search_mode = {
+-- Configure search mode keys
+local function searchMode()
+    local mapper  = Mapper.new()
+    local map     = mapper.map
+    local unixmap = mapper.unixmap
+    local winmap  = mapper.winmap
+
+    return {
         { key = "Enter", mods = "NONE", action = act.CopyMode("PriorMatch") },
         { key = "Escape", mods = "NONE", action = act.CopyMode("Close") },
         { key = "n", mods = mods.primary, action = act.CopyMode("NextMatch") },
@@ -302,13 +326,13 @@ M.key_tables = {
         { key = "PageDown", mods = "NONE", action = act.CopyMode("NextMatchPage") },
         { key = "UpArrow", mods = "NONE", action = act.CopyMode("PriorMatch") },
         { key = "DownArrow", mods = "NONE", action = act.CopyMode("NextMatch") },
-    },
-}
+    }
+end
 
 function M.configure(config)
-    config.leader = M.leader
-    config.keys = M.keys
-    config.key_tables = M.key_tables
+    config.leader = leader()
+    config.keys = key()
+    config.key_tables = { copy_mode = copyMode(), search_mode = searchMode() }
 
     -- display leader mode
     wezterm.on("update-right-status", function(window, _)
