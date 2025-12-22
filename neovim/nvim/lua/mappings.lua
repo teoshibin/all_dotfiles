@@ -31,6 +31,13 @@ map("n", "<C-h>", "<C-w><C-h>")
 map("n", "<C-k>", "<C-w><C-k>")
 map("n", "<C-j>", "<C-w><C-j>")
 
+-- Move panes
+map({ "n", "t" }, "<leader>w", "<C-w>")
+
+-- Close panes
+map("n", "<leader>x", "<C-w>c")
+map("n", "<leader>X", "<C-w>o")
+
 -- New Line
 map("n", "<leader>o", 'o<Esc>0"_D', { desc = "General Add newline below" })
 map("n", "<leader>O", 'O<Esc>0"_D', { desc = "General Add newline above" })
