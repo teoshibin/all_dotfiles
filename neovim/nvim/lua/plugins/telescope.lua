@@ -32,7 +32,10 @@ return {
                     height = 0.80,
                 },
                 mappings = {
-                    n = { ["q"] = require("telescope.actions").close },
+                    n = {
+                        ["q"] = require("telescope.actions").close,
+                        ["<C-s>"] = require("telescope.actions").select_horizontal,
+                    },
                     i = {
                         ["<C-b>"] = function(bufnr)
                             full_page_scroll(bufnr, 1)
@@ -40,6 +43,7 @@ return {
                         ["<C-f>"] = function(bufnr)
                             full_page_scroll(bufnr, -1)
                         end,
+                        ["<C-s>"] = require("telescope.actions").select_horizontal,
                     },
                 },
             },
