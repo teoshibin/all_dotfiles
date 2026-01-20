@@ -67,7 +67,6 @@ window_effects:
     border:
       enabled: true
       color: '#625f6f'
-      # color: '#a1a1a1'
     hide_title_bar:
       enabled: false
     corner_style:
@@ -102,41 +101,55 @@ workspaces:
   - name: '1'
     bind_to_monitor: 0
   - name: '2'
+    bind_to_monitor: 0
   - name: '3'
+    bind_to_monitor: 0
   - name: '4'
+    bind_to_monitor: 0
   - name: '5'
+    bind_to_monitor: 0
   - name: '6'
+    bind_to_monitor: 1
   - name: '7'
+    bind_to_monitor: 1
   - name: '8'
+    bind_to_monitor: 1
   - name: '9'
+    bind_to_monitor: 1
   - name: '0'
     bind_to_monitor: 1
     keep_alive: true
 
 window_rules:
+  # default application workspace assignment
   - commands: ["move --workspace 1"]
     match:
       - window_process: { equals: 'Discord' }
+  - commands: ["move --workspace 2"]
+    match:
+      - window_process: { regex: 'WhatsApp.*' }
   - commands: ["move --workspace 6"]
     match:
+      - window_process: { equals: 'steamwebhelper' }
+  - commands: ["move --workspace 7"]
+    match:
       - window_process: { equals: 'Obsidian' }
+  - commands: ["move --workspace 0"]
+    match:
+      - window_process: { equals: 'firefox' }
 
+  # incompatible application
   - commands: ["set-floating"]
     match:
-      # windows command palette
-      - window_title: { equals: 'Command Palette' }
-      # Winspy
-      - window_process: { equals: 'winspy' }
-      # OBS
-      - window_process: { equals: 'obs64' }
+      - window_title: { equals: 'Command Palette' }   # windows command palette
+      - window_process: { equals: 'winspy' }          # Winspy
+      - window_process: { equals: 'obs64' }           # obs
         window_title: { regex: 'Properties for.*' }
       - window_process: { equals: 'obs64' }
         window_title: { regex: 'Remux.*' }
-      # Jetbrain IDEs
-      - window_process: { equals: 'rustrover64' }
+      - window_process: { equals: 'rustrover64' }     # ide
         window_title: { equals: 'Settings' }
-      # godot
-      - window_process: { regex: 'Godot.*' }
+      - window_process: { regex: 'Godot.*' }          # godot
 
   - commands: ['ignore']
     match:
@@ -170,7 +183,7 @@ window_rules:
         window_class: { regex: 'HwndWrapper' }
 
 binding_modes:
-  # When enabled, the focused window can be resized via arrow keys or HJKL.
+  # resize mode
   - name: 'resize'
     keybindings:
       - commands: ['resize --width -2%']
@@ -181,19 +194,17 @@ binding_modes:
         bindings: ['k', 'up']
       - commands: ['resize --height -2%']
         bindings: ['j', 'down']
-      # Press enter/escape to return to default keybindings.
       - commands: ['wm-disable-binding-mode --name resize']
         bindings: ['escape', 'enter', 'alt+r']
 
-  # When enabled, all keybindings are disabled except for alt+shift+p which
-  # returns to default keybindings.
+  # pause mode
   - name: 'pause'
     keybindings:
       - commands: ['wm-disable-binding-mode --name pause']
         bindings: ['alt+shift+p']
 
 keybindings:
-  # Shift focus in a given direction.
+  # shift focus in a given direction.
   - commands: ['focus --direction left']
     bindings: ['alt+h', 'alt+left']
   - commands: ['focus --direction right']
@@ -203,7 +214,7 @@ keybindings:
   - commands: ['focus --direction down']
     bindings: ['alt+j', 'alt+down']
 
-  # Move focused window in a given direction.
+  # move focused window in a given direction.
   - commands: ['move --direction left']
     bindings: ['alt+shift+h', 'alt+shift+left']
   - commands: ['move --direction right']
@@ -213,23 +224,11 @@ keybindings:
   - commands: ['move --direction down']
     bindings: ['alt+shift+j', 'alt+shift+down']
 
-  # # Resize focused window by a percentage or pixel amount.
-  # - commands: ['resize --width -2%']
-  #   bindings: ['alt+u']
-  # - commands: ['resize --width +2%']
-  #   bindings: ['alt+p']
-  # - commands: ['resize --height +2%']
-  #   bindings: ['alt+o']
-  # - commands: ['resize --height -2%']
-  #   bindings: ['alt+i']
-
-  # As an alternative to the resize keybindings above, resize mode enables
-  # resizing via arrow keys or HJKL. The binding mode is defined above with
-  # the name 'resize'.
+  # enter resize mode
   - commands: ['wm-enable-binding-mode --name resize']
     bindings: ['alt+r']
 
-  # Disables all keybindings until alt+shift+p is pressed again.
+  # enter pause mode
   - commands: ['wm-enable-binding-mode --name pause']
     bindings: ['alt+shift+p']
 
