@@ -154,6 +154,8 @@ window_rules:
   - commands: ['ignore']
     match:
       # Games
+      - window_process: { regex: "Endfield" }
+        window_class: { regex: '.*' }
       - window_process: { regex: "bf6" }
         window_class: { regex: '.*' }
       - window_process: { equals: 'BF2042' }
