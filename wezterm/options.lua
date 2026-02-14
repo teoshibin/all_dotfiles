@@ -4,32 +4,89 @@ M = {}
 local wezterm = require("wezterm")
 local platform = require("lib.platform")
 
+-- per-window state
+local opacity_by_window = {}
 
-local function configure_colorscheme(config)
+local function configure_colorscheme()
     DEFAULT_THEME = "Catppuccin Mocha"
     SSH_THEME = "Cobalt2"
 
-    if platform.isMac() then
-        config.window_background_opacity = 0.9
-    else
-        config.window_background_opacity = 1.0
+    local function apply_overrides(window, pane)
+        local id = window:window_id()
+        local opacity = opacity_by_window[id] -- may be nil
+
+        local overrides = window:get_config_overrides() or {}
+
+        -- keep opacity override stable
+        if opacity ~= nil then
+            overrides.window_background_opacity = opacity
+        else
+            overrides.window_background_opacity = nil
+        end
+
+        -- theme switch
+        local fg = pane and pane:get_foreground_process_name() or ""
+        overrides.color_scheme = (fg == "/usr/bin/ssh") and SSH_THEME or DEFAULT_THEME
+
+        local dimmed = (opacity ~= nil and opacity < 0.999)
+        if platform.isWindows() then
+            -- overrides.win32_system_backdrop = dimmed and "Acrylic" or nil
+        elseif platform.isMac() then
+            overrides.macos_window_background_blur = dimmed and 20 or nil
+        elseif platform.isLinux() then
+            overrides.kde_window_background_blur = dimmed and true or nil
+        end
+
+        window:set_config_overrides(overrides)
     end
 
-    config.color_scheme = DEFAULT_THEME
+    -- update theme on ssh
+    wezterm.on("update-status", function(window, pane)
+        apply_overrides(window, pane)
+    end)
 
-    wezterm.on('update-status',
-        function(window, pane)
-            local fg_process_name = pane:get_foreground_process_name()
-            local overrides = window:get_config_overrides() or {}
-            if fg_process_name == '/usr/bin/ssh' then
-                overrides.color_scheme = SSH_THEME
-            else
-                overrides.color_scheme = DEFAULT_THEME
-            end
-            window:set_config_overrides(overrides)
+    -- update theme on opacity toggle
+    wezterm.on("toggle-opacity", function(window, pane)
+        local id = window:window_id()
+        local cur = opacity_by_window[id]
+
+        if cur == nil or cur >= 0.999 then
+            opacity_by_window[id] = 0.9
+        else
+            opacity_by_window[id] = 1.0
         end
-    )
+
+        apply_overrides(window, pane)
+    end)
 end
+
+
+-- local function configure_colorscheme(config)
+--     DEFAULT_THEME = "Catppuccin Mocha"
+--     SSH_THEME = "Cobalt2"
+--
+--     -- if platform.isMac() then
+--     --     config.window_background_opacity = 0.9
+--     -- else
+--     --     config.window_background_opacity = 1.0
+--     -- end
+--
+--     config.color_scheme = DEFAULT_THEME
+--
+--     -- wezterm.on('update-status',
+--     --     function(window, pane)
+--     --         local fg_process_name = pane:get_foreground_process_name()
+--     --         local overrides = window:get_config_overrides() or {}
+--     --         if fg_process_name == '/usr/bin/ssh' then
+--     --             overrides.color_scheme = SSH_THEME
+--     --         else
+--     --             overrides.color_scheme = DEFAULT_THEME
+--     --         end
+--     --         window:set_config_overrides(overrides)
+--     --         wezterm.log_info(overrides)
+--     --     end
+--     -- )
+-- end
 
 function M.configure(config)
     config.automatically_reload_config = false
@@ -95,6 +152,8 @@ function M.configure(config)
         saturation = 0.8,
         brightness = 0.5,
     }
+
+    config.window_background_opacity = 0.9
 end
 
 return M
