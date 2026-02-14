@@ -60,34 +60,6 @@ local function configure_colorscheme()
     end)
 end
 
-
--- local function configure_colorscheme(config)
---     DEFAULT_THEME = "Catppuccin Mocha"
---     SSH_THEME = "Cobalt2"
---
---     -- if platform.isMac() then
---     --     config.window_background_opacity = 0.9
---     -- else
---     --     config.window_background_opacity = 1.0
---     -- end
---
---     config.color_scheme = DEFAULT_THEME
---
---     -- wezterm.on('update-status',
---     --     function(window, pane)
---     --         local fg_process_name = pane:get_foreground_process_name()
---     --         local overrides = window:get_config_overrides() or {}
---     --         if fg_process_name == '/usr/bin/ssh' then
---     --             overrides.color_scheme = SSH_THEME
---     --         else
---     --             overrides.color_scheme = DEFAULT_THEME
---     --         end
---     --         window:set_config_overrides(overrides)
---     --         wezterm.log_info(overrides)
---     --     end
---     -- )
--- end
-
 function M.configure(config)
     config.automatically_reload_config = false
     config.max_fps = 120
