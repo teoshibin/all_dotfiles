@@ -20,6 +20,7 @@ New-Item -ItemType SymbolicLink -Path <destination> -Target <source>
 |--------|-------------|
 | wezterm | `~/.config/wezterm` |
 | neovim (nvch) | `~/.config/nvch` (unix) / `~/AppData/Local/nvch` (windows) |
+| neovim (nvim) | `~/.config/nvim` (unix) / `~/AppData/Local/nvim` (windows) |
 | fish | `~/.config/fish/config.fish` |
 | bash | `~/.bash_profile` |
 | ghostty | `~/.config/ghostty/config` |
