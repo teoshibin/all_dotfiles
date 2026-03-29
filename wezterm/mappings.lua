@@ -116,9 +116,9 @@ local function key()
     unixmap("v", mods.cmd, act.PasteFrom("Clipboard"))
 
     -- search on cursor
-    map("f", mods.leader, act.Search("CurrentSelectionOrEmptyString"))
-    winmap("f", mods.ctrl_shift, act.Search("CurrentSelectionOrEmptyString"))
-    unixmap("f", mods.cmd, act.Search("CurrentSelectionOrEmptyString"))
+    map("f", mods.leader, act.Search({ CaseInSensitiveString = "" }))
+    winmap("f", mods.ctrl_shift, act.Search({ CaseInSensitiveString = "" }))
+    unixmap("f", mods.cmd, act.Search({ CaseInSensitiveString = "" }))
 
     -- command palette
     map("p", mods.leader, act.ActivateCommandPalette)
@@ -193,8 +193,8 @@ local function key()
     unixmap("Insert", mods.cmd, act.CopyTo("PrimarySelection"))
 
     -- idk
-    map("Copy", "NONE", act.CopyTo("Clipboard"))
-    map("Paste", "NONE", act.PasteFrom("Clipboard"))
+    map("Copy", mods.none, act.CopyTo("Clipboard"))
+    map("Paste", mods.none, act.PasteFrom("Clipboard"))
 
     -- toggle opacity
     map("o", mods.leader, act.EmitEvent("toggle-opacity"))
@@ -209,89 +209,92 @@ local function copyMode()
     local unixmap = mapper.unixmap
     local winmap  = mapper.winmap
 
-    return {
-        -- Movement
-        { key = "h", mods = "NONE", action = act.CopyMode("MoveLeft") },
-        { key = "j", mods = "NONE", action = act.CopyMode("MoveDown") },
-        { key = "k", mods = "NONE", action = act.CopyMode("MoveUp") },
-        { key = "l", mods = "NONE", action = act.CopyMode("MoveRight") },
-        { key = "w", mods = "NONE", action = act.CopyMode("MoveForwardWord") },
-        { key = "b", mods = "NONE", action = act.CopyMode("MoveBackwardWord") },
-        { key = "e", mods = "NONE", action = act.CopyMode("MoveForwardWordEnd") },
-        { key = "0", mods = "NONE", action = act.CopyMode("MoveToStartOfLine") },
-        { key = "$", mods = "NONE", action = act.CopyMode("MoveToEndOfLineContent") },
-        { key = "^", mods = "NONE", action = act.CopyMode("MoveToStartOfLineContent") },
-        { key = "g", mods = "NONE", action = act.CopyMode("MoveToScrollbackTop") },
-        { key = "G", mods = "NONE", action = act.CopyMode("MoveToScrollbackBottom") },
-        { key = "H", mods = "NONE", action = act.CopyMode("MoveToViewportTop") },
-        { key = "M", mods = "NONE", action = act.CopyMode("MoveToViewportMiddle") },
-        { key = "L", mods = "NONE", action = act.CopyMode("MoveToViewportBottom") },
+    -- Movement
+    map("h", mods.none, act.CopyMode("MoveLeft"))
+    map("j", mods.none, act.CopyMode("MoveDown"))
+    map("k", mods.none, act.CopyMode("MoveUp"))
+    map("l", mods.none, act.CopyMode("MoveRight"))
+    map("w", mods.none, act.CopyMode("MoveForwardWord"))
+    map("b", mods.none, act.CopyMode("MoveBackwardWord"))
+    map("e", mods.none, act.CopyMode("MoveForwardWordEnd"))
+    map("0", mods.none, act.CopyMode("MoveToStartOfLine"))
+    map("$", mods.none, act.CopyMode("MoveToEndOfLineContent"))
+    map("^", mods.none, act.CopyMode("MoveToStartOfLineContent"))
+    map("g", mods.none, act.CopyMode("MoveToScrollbackTop"))
+    map("G", mods.none, act.CopyMode("MoveToScrollbackBottom"))
+    map("H", mods.none, act.CopyMode("MoveToViewportTop"))
+    map("M", mods.none, act.CopyMode("MoveToViewportMiddle"))
+    map("L", mods.none, act.CopyMode("MoveToViewportBottom"))
 
-        -- Selection
-        { key = "Space", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Cell" }) },
-        { key = "v", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Cell" }) },
-        { key = "V", mods = "NONE", action = act.CopyMode({ SetSelectionMode = "Line" }) },
-        { key = "v", mods = mods.primary, action = act.CopyMode({ SetSelectionMode = "Block" }) },
-        { key = "o", mods = "NONE", action = act.CopyMode("MoveToSelectionOtherEnd") },
-        { key = "O", mods = "NONE", action = act.CopyMode("MoveToSelectionOtherEndHoriz") },
+    -- Selection
+    map("Space", mods.none, act.CopyMode({ SetSelectionMode = "Cell" }))
+    map("v",     mods.none, act.CopyMode({ SetSelectionMode = "Cell" }))
+    map("V",     mods.none, act.CopyMode({ SetSelectionMode = "Line" }))
+    winmap("v",  mods.ctrl, act.CopyMode({ SetSelectionMode = "Block" }))
+    unixmap("v", mods.cmd,  act.CopyMode({ SetSelectionMode = "Block" }))
+    map("o", mods.none, act.CopyMode("MoveToSelectionOtherEnd"))
+    map("O", mods.none, act.CopyMode("MoveToSelectionOtherEndHoriz"))
 
-        -- Jumping
-        { key = "f", mods = "NONE", action = act.CopyMode({ JumpForward = { prev_char = false } }) },
-        { key = "F", mods = "NONE", action = act.CopyMode({ JumpBackward = { prev_char = false } }) },
-        { key = "t", mods = "NONE", action = act.CopyMode({ JumpForward = { prev_char = true } }) },
-        { key = "T", mods = "NONE", action = act.CopyMode({ JumpBackward = { prev_char = true } }) },
-        { key = ";", mods = "NONE", action = act.CopyMode("JumpAgain") },
-        { key = ",", mods = "NONE", action = act.CopyMode("JumpReverse") },
+    -- Jumping
+    map("f", mods.none, act.CopyMode({ JumpForward  = { prev_char = false } }))
+    map("F", mods.none, act.CopyMode({ JumpBackward = { prev_char = false } }))
+    map("t", mods.none, act.CopyMode({ JumpForward  = { prev_char = true } }))
+    map("T", mods.none, act.CopyMode({ JumpBackward = { prev_char = true } }))
+    map(";", mods.none, act.CopyMode("JumpAgain"))
+    map(",", mods.none, act.CopyMode("JumpReverse"))
 
-        -- Scrolling
-        { key = "d", mods = mods.primary, action = act.CopyMode({ MoveByPage = 0.5 }) },
-        { key = "u", mods = mods.primary, action = act.CopyMode({ MoveByPage = -0.5 }) },
-        { key = "b", mods = mods.primary, action = act.CopyMode("PageUp") },
-        { key = "f", mods = mods.primary, action = act.CopyMode("PageDown") },
-        { key = "PageUp", mods = "NONE", action = act.CopyMode("PageUp") },
-        { key = "PageDown", mods = "NONE", action = act.CopyMode("PageDown") },
+    -- Scrolling
+    winmap("d",  mods.ctrl, act.CopyMode({ MoveByPage = 0.5 }))
+    unixmap("d", mods.cmd,  act.CopyMode({ MoveByPage = 0.5 }))
+    winmap("u",  mods.ctrl, act.CopyMode({ MoveByPage = -0.5 }))
+    unixmap("u", mods.cmd,  act.CopyMode({ MoveByPage = -0.5 }))
+    winmap("b",  mods.ctrl, act.CopyMode("PageUp"))
+    unixmap("b", mods.cmd,  act.CopyMode("PageUp"))
+    winmap("f",  mods.ctrl, act.CopyMode("PageDown"))
+    unixmap("f", mods.cmd,  act.CopyMode("PageDown"))
+    map("PageUp",   mods.none, act.CopyMode("PageUp"))
+    map("PageDown", mods.none, act.CopyMode("PageDown"))
 
-        -- Actions
-        {
-            key = "y",
-            mods = "NONE",
-            action = act.Multiple({ { CopyTo = "ClipboardAndPrimarySelection" }, { CopyMode = "Close" } }),
-        },
-        { key = "Escape", mods = "NONE", action = act.CopyMode("Close") },
-        { key = "q", mods = "NONE", action = act.CopyMode("Close") },
-        { key = "c", mods = mods.primary, action = act.CopyMode("Close") },
-        { key = "g", mods = mods.primary, action = act.CopyMode("Close") },
-        { key = "Enter", mods = "NONE", action = act.CopyMode("MoveToStartOfNextLine") },
+    -- Actions
+    map("y", mods.none, act.Multiple({ { CopyTo = "ClipboardAndPrimarySelection" }, { CopyMode = "Close" } }))
+    map("Escape", mods.none, act.CopyMode("Close"))
+    map("q",      mods.none, act.CopyMode("Close"))
+    winmap("c",  mods.ctrl, act.CopyMode("Close"))
+    unixmap("c", mods.cmd,  act.CopyMode("Close"))
+    winmap("g",  mods.ctrl, act.CopyMode("Close"))
+    unixmap("g", mods.cmd,  act.CopyMode("Close"))
+    map("Enter", mods.none, act.CopyMode("MoveToStartOfNextLine"))
 
-        -- Additional movement
-        { key = "Tab", mods = "NONE", action = act.CopyMode("MoveForwardWord") },
-        { key = "Tab", mods = "SHIFT", action = act.CopyMode("MoveBackwardWord") },
-        { key = "End", mods = "NONE", action = act.CopyMode("MoveToEndOfLineContent") },
-        { key = "Home", mods = "NONE", action = act.CopyMode("MoveToStartOfLine") },
-        { key = "LeftArrow", mods = "NONE", action = act.CopyMode("MoveLeft") },
-        { key = "RightArrow", mods = "NONE", action = act.CopyMode("MoveRight") },
-        { key = "UpArrow", mods = "NONE", action = act.CopyMode("MoveUp") },
-        { key = "DownArrow", mods = "NONE", action = act.CopyMode("MoveDown") },
-        { key = "LeftArrow", mods = mods.alt, action = act.CopyMode("MoveBackwardWord") },
-        { key = "RightArrow", mods = mods.alt, action = act.CopyMode("MoveForwardWord") },
+    -- Additional movement
+    map("Tab",        mods.none,  act.CopyMode("MoveForwardWord"))
+    map("Tab",        mods.shift, act.CopyMode("MoveBackwardWord"))
+    map("End",        mods.none,  act.CopyMode("MoveToEndOfLineContent"))
+    map("Home",       mods.none,  act.CopyMode("MoveToStartOfLine"))
+    map("LeftArrow",  mods.none,  act.CopyMode("MoveLeft"))
+    map("RightArrow", mods.none,  act.CopyMode("MoveRight"))
+    map("UpArrow",    mods.none,  act.CopyMode("MoveUp"))
+    map("DownArrow",  mods.none,  act.CopyMode("MoveDown"))
+    map("LeftArrow",  mods.alt, act.CopyMode("MoveBackwardWord"))
+    map("RightArrow", mods.alt, act.CopyMode("MoveForwardWord"))
 
-        -- Alt movement
-        { key = "b", mods = mods.alt, action = act.CopyMode("MoveBackwardWord") },
-        { key = "f", mods = mods.alt, action = act.CopyMode("MoveForwardWord") },
-        { key = "m", mods = mods.alt, action = act.CopyMode("MoveToStartOfLineContent") },
+    -- Alt movement
+    map("b", mods.alt, act.CopyMode("MoveBackwardWord"))
+    map("f", mods.alt, act.CopyMode("MoveForwardWord"))
+    map("m", mods.alt, act.CopyMode("MoveToStartOfLineContent"))
 
-        -- Shift variants
-        { key = "$", mods = "SHIFT", action = act.CopyMode("MoveToEndOfLineContent") },
-        { key = "F", mods = "SHIFT", action = act.CopyMode({ JumpBackward = { prev_char = false } }) },
-        { key = "G", mods = "SHIFT", action = act.CopyMode("MoveToScrollbackBottom") },
-        { key = "H", mods = "SHIFT", action = act.CopyMode("MoveToViewportTop") },
-        { key = "L", mods = "SHIFT", action = act.CopyMode("MoveToViewportBottom") },
-        { key = "M", mods = "SHIFT", action = act.CopyMode("MoveToViewportMiddle") },
-        { key = "O", mods = "SHIFT", action = act.CopyMode("MoveToSelectionOtherEndHoriz") },
-        { key = "T", mods = "SHIFT", action = act.CopyMode({ JumpBackward = { prev_char = true } }) },
-        { key = "V", mods = "SHIFT", action = act.CopyMode({ SetSelectionMode = "Line" }) },
-        { key = "^", mods = "SHIFT", action = act.CopyMode("MoveToStartOfLineContent") },
-    }
+    -- Shift variants
+    map("$", mods.shift, act.CopyMode("MoveToEndOfLineContent"))
+    map("F", mods.shift, act.CopyMode({ JumpBackward = { prev_char = false } }))
+    map("G", mods.shift, act.CopyMode("MoveToScrollbackBottom"))
+    map("H", mods.shift, act.CopyMode("MoveToViewportTop"))
+    map("L", mods.shift, act.CopyMode("MoveToViewportBottom"))
+    map("M", mods.shift, act.CopyMode("MoveToViewportMiddle"))
+    map("O", mods.shift, act.CopyMode("MoveToSelectionOtherEndHoriz"))
+    map("T", mods.shift, act.CopyMode({ JumpBackward = { prev_char = true } }))
+    map("V", mods.shift, act.CopyMode({ SetSelectionMode = "Line" }))
+    map("^", mods.shift, act.CopyMode("MoveToStartOfLineContent"))
+
+    return mapper.keys
 end
 
 -- Configure search mode keys
@@ -301,18 +304,22 @@ local function searchMode()
     local unixmap = mapper.unixmap
     local winmap  = mapper.winmap
 
-    return {
-        { key = "Enter", mods = "NONE", action = act.CopyMode("PriorMatch") },
-        { key = "Escape", mods = "NONE", action = act.CopyMode("Close") },
-        { key = "n", mods = mods.primary, action = act.CopyMode("NextMatch") },
-        { key = "p", mods = mods.primary, action = act.CopyMode("PriorMatch") },
-        { key = "r", mods = mods.primary, action = act.CopyMode("CycleMatchType") },
-        { key = "u", mods = mods.primary, action = act.CopyMode("ClearPattern") },
-        { key = "PageUp", mods = "NONE", action = act.CopyMode("PriorMatchPage") },
-        { key = "PageDown", mods = "NONE", action = act.CopyMode("NextMatchPage") },
-        { key = "UpArrow", mods = "NONE", action = act.CopyMode("PriorMatch") },
-        { key = "DownArrow", mods = "NONE", action = act.CopyMode("NextMatch") },
-    }
+    map("Enter",     mods.none, act.CopyMode("PriorMatch"))
+    map("Escape",    mods.none, act.CopyMode("Close"))
+    winmap("n",  mods.ctrl, act.CopyMode("NextMatch"))
+    unixmap("n", mods.cmd,  act.CopyMode("NextMatch"))
+    winmap("p",  mods.ctrl, act.CopyMode("PriorMatch"))
+    unixmap("p", mods.cmd,  act.CopyMode("PriorMatch"))
+    winmap("r",  mods.ctrl, act.CopyMode("CycleMatchType"))
+    unixmap("r", mods.cmd,  act.CopyMode("CycleMatchType"))
+    winmap("u",  mods.ctrl, act.CopyMode("ClearPattern"))
+    unixmap("u", mods.cmd,  act.CopyMode("ClearPattern"))
+    map("PageUp",    mods.none, act.CopyMode("PriorMatchPage"))
+    map("PageDown",  mods.none, act.CopyMode("NextMatchPage"))
+    map("UpArrow",   mods.none, act.CopyMode("PriorMatch"))
+    map("DownArrow", mods.none, act.CopyMode("NextMatch"))
+
+    return mapper.keys
 end
 
 function M.configure(config)

@@ -92,6 +92,10 @@ function M.configure(config)
     elseif platform.isMac() then
         config.default_prog = { '/opt/homebrew/bin/fish', '-l' }
 
+        -- patch: disable left Option key composition so alt+backspace word delete works;
+        -- use right Option for macOS accent characters instead
+        config.send_composed_key_when_left_alt_is_pressed = false
+
         local mux = wezterm.mux
 
         wezterm.on("gui-startup", function()
