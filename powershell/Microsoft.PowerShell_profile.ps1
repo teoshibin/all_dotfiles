@@ -1,7 +1,9 @@
 
 # Theme ##
 
-oh-my-posh init pwsh --config ~/neeon.omp.json | Invoke-Expression
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+    oh-my-posh init pwsh --config ~/neeon.omp.json | Invoke-Expression
+}
 $Env:VIRTUAL_ENV_DISABLE_PROMPT = 1 # disable python env prompt
 
 ## PS Modules ##
@@ -33,10 +35,16 @@ function Install-Modules {
 
 # See more example
 # https://github.com/PowerShell/PSReadLine/blob/master/PSReadLine/SamplePSReadLineProfile.ps1
-Set-PSReadLineOption -PredictionViewStyle ListView
-Set-PSReadLineOption -BellStyle None
-Set-PSReadLineKeyHandler -Key ctrl+p -Function PreviousHistory 
-Set-PSReadLineKeyHandler -Key ctrl+n -Function NextHistory 
+if ($Host.Name -eq "ConsoleHost" -and [Environment]::UserInteractive) {
+    try {
+        Set-PSReadLineOption -PredictionViewStyle ListView -ErrorAction Stop
+        Set-PSReadLineOption -BellStyle None -ErrorAction Stop
+        Set-PSReadLineKeyHandler -Key ctrl+p -Function PreviousHistory -ErrorAction Stop
+        Set-PSReadLineKeyHandler -Key ctrl+n -Function NextHistory -ErrorAction Stop
+    } catch {
+        # Skip PSReadLine customization in hosts without a usable console handle.
+    }
+}
 
 ## Neovim ##
 
