@@ -26,7 +26,8 @@ return {
             "toml", "json",
             "bash",
             "html",
-            "python","java", "kotlin"
+            "python","java", "kotlin",
+            "cpp"
         }
 
         vim.api.nvim_create_autocmd("UIEnter", {
