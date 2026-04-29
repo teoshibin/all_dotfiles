@@ -1,0 +1,143 @@
+// Zed keymap
+
+//
+
+// For information on binding keys, see the Zed
+
+// documentation: https://zed.dev/docs/key-bindings
+
+//
+
+// To see the default key bindings run `zed: Open Default Keymap`
+
+// from the command palette.
+
+[
+  // ============================================================
+  // INSERT MODE: jj and jk both exit to normal mode
+  // (matches IdeaVim inoremap jj <Esc> / jk <Esc>)
+  // ============================================================
+  {
+    "context": "vim_mode == insert",
+    "bindings": {
+      "j j": "vim::NormalBefore",
+      "j k": "vim::NormalBefore",
+    },
+  },
+
+  // ============================================================
+  // NORMAL MODE: leader (space) bindings
+  // ============================================================
+  {
+    "context": "vim_mode == normal",
+    "bindings": {
+      // ----- LSP -----
+      // <leader>a: show code actions (ShowIntentionActions)
+      "space a": "editor::ToggleCodeActions",
+      // <leader>ea: open outline panel (ActivateStructureToolWindow)
+      "space e a": "outline_panel::ToggleFocus",
+      // <leader>ee: open diagnostics list (ActivateProblemsViewToolWindow)
+      "space e e": "diagnostics::Deploy",
+      // <leader>E: show error description / hover (ShowErrorDescription)
+      "space shift-e": "editor::Hover",
+      // <leader>r: rename symbol (RenameElement). Default cd / g r n still work too.
+      "space r": "editor::Rename",
+      // <leader>fm: format whole file (ReformatCode)
+      "space f m": "editor::Format",
+
+      // ----- New blank line, no comment continuation -----
+      // <leader>o / <leader>O: insert empty line below / above, stay in normal.
+      // Native Zed actions, no SendKeystrokes hack needed.
+      "space o": "vim::InsertEmptyLineBelow",
+      "space shift-o": "vim::InsertEmptyLineAbove",
+
+      // ----- Repeat last macro -----
+      // <leader>. as alias for @@. Plain @@ already works in Zed via vim::PushReplayRegister.
+      "space .": ["workspace::SendKeystrokes", "@ @"],
+
+      // ----- Tabs -----
+      // <leader>x: close current tab (:bd)
+      "space x": "pane::CloseActiveItem",
+      // <leader>X: close all but active (CloseAllEditorsButActive)
+      "space shift-x": "pane::CloseOtherItems",
+
+      // ----- Splits -----
+      // <leader>; vertical, <leader>: horizontal
+      "space ;": "pane::SplitVertical",
+      "space :": "pane::SplitHorizontal",
+
+      // ----- Project panel (NERDTree replacement) -----
+      // <leader>n: toggle and focus project panel (NERDTreeToggle)
+      "space n": "project_panel::ToggleFocus",
+      // <leader>N: same action - Zed has no separate "force focus" variant (NERDTreeFocus)
+      "space shift-n": "project_panel::ToggleFocus",
+
+      // ----- Search -----
+      // <leader>sf: file finder (GotoFile)
+      "space s f": "file_finder::Toggle",
+      // <leader>sa: project-wide search (FindInPath)
+      "space s a": "pane::DeploySearch",
+      // <leader>sb: tab switcher (Switcher)
+      "space s b": "tab_switcher::Toggle",
+      // <leader>sk: command palette (GotoAction)
+      "space s k": "command_palette::Toggle",
+      // <leader>sr: project symbols / classes (GotoClass)
+      "space s r": "project_symbols::Toggle",
+      // <leader>ss: outline / symbols in file (GotoSymbol)
+      "space s s": "outline::Toggle",
+
+      // ----- Run / Debug (backslash prefix) -----
+      // \r: spawn task (closest to IdeaVim Run)
+      "\\ r": "task::Spawn",
+      // \R: continue debug (Resume)
+      "\\ shift-r": "debugger::Continue",
+      // \d: start debug (Debug)
+      "\\ d": "debugger::Start",
+      // \s: stop debug (Stop)
+      "\\ s": "debugger::Stop",
+      // \b: toggle breakpoint (ToggleLineBreakpoint)
+      "\\ b": "editor::ToggleBreakpoint",
+      // \g: open git panel. Zed has no direct conflict-resolver action,
+      // git panel is the closest workflow match.
+      "\\ g": "git_panel::ToggleFocus",
+    },
+  },
+  // ============================================================
+  // NORMAL + VISUAL + OPERATOR: motions and LSP overrides
+  // ============================================================
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      // ----- LSP overrides (your IdeaVim semantics differ from Zed defaults) -----
+      // gD -> type definition. Zed default gD is GoToDeclaration, gy is type definition.
+      // This override loses access to GoToDeclaration on gD.
+      // "g shift-d": "editor::GoToTypeDefinition",
+      // gi -> implementation. Zed default gi is vim::InsertAtPrevious. You lose that.
+      "g i": "editor::GoToImplementation",
+      // gr -> find usages. Zed default gA is references and g r X is a prefix
+      // (g r n rename, g r r refs, etc). This override removes the g r prefix entirely.
+      // "g r": "editor::FindAllReferences",
+
+      // ----- Diagnostics aliases -----
+      // ]e / [e as alias to Zed default ]d / [d
+      "] e": "editor::GoToDiagnostic",
+      "[ e": "editor::GoToPreviousDiagnostic",
+
+      // ----- Pane nav -----
+      // ctrl-h/j/k/l move between panes.
+      // ctrl-j here overrides Zed default vim::Down. ctrl-h/k/l are otherwise free.
+      "ctrl-h": "workspace::ActivatePaneLeft",
+      "ctrl-j": "workspace::ActivatePaneDown",
+      "ctrl-k": "workspace::ActivatePaneUp",
+      "ctrl-l": "workspace::ActivatePaneRight",
+
+      // ----- Pane resize -----
+      // ctrl-arrows resize the active pane.
+      // Overrides Zed defaults ctrl-up / ctrl-down (LineUp / LineDown).
+      "ctrl-up": "vim::ResizePaneUp",
+      "ctrl-down": "vim::ResizePaneDown",
+      "ctrl-left": "vim::ResizePaneLeft",
+      "ctrl-right": "vim::ResizePaneRight",
+    },
+  },
+]
