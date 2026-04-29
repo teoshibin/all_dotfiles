@@ -154,7 +154,6 @@ window_rules:
         window_title: { equals: 'Settings' }
       - window_process: { regex: 'Godot.*' }          # godot
       - window_process: { equals: 'devenv' }
-        window_title: { regex: 'Microsoft Visual Studio', not: true }
 
   - commands: ['ignore']
     match:
