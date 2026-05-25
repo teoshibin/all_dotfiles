@@ -51,7 +51,7 @@ local function configure_colorscheme()
         local cur = opacity_by_window[id]
 
         if cur == nil or cur >= 0.999 then
-            opacity_by_window[id] = 0.9
+            opacity_by_window[id] = 0.6
         else
             opacity_by_window[id] = 1.0
         end
@@ -129,7 +129,7 @@ function M.configure(config)
         brightness = 0.5,
     }
 
-    config.window_background_opacity = 0.9
+    config.window_background_opacity = 0.7
 end
 
 return M
