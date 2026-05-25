@@ -70,7 +70,9 @@ function M.configure(config)
         'JetBrainsMono Nerd Font Mono',
         'Menlo',
         'Consolas',
-        'monospace'
+        'monospace',
+        'Cascadia Mono',
+        'JetBrainsMono Nerd Font',
     }
     if platform.isMac() then
         config.font_size = 16
