@@ -130,13 +130,13 @@ window_rules:
       - window_process: { regex: 'WhatsApp.*' }
   - commands: ["move --workspace 3"]
     match:
-      - window_process: { equals: 'steamwebhelper' }
-  - commands: ["move --workspace 8"]
-    match:
       - window_process: { equals: "claude" }
-  - commands: ["move --workspace 9"]
+  - commands: ["move --workspace 6"]
     match:
       - window_process: { equals: 'Obsidian' }
+  - commands: ["move --workspace 7"]
+    match:
+      - window_process: { equals: 'steamwebhelper' }
   - commands: ["move --workspace 0"]
     match:
       - window_process: { equals: 'firefox' }
