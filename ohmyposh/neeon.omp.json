@@ -64,7 +64,7 @@
             "fetch_status": true,
             "fetch_upstream_icon": true
           },
-          "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{ if gt .StashCount 0 }} \uf692{{ .StashCount }}{{ end }} ",
+          "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{ if gt .StashCount 0 }} \uf01c{{ .StashCount }}{{ end }} ",
           "foreground": "p:green",
           "powerline_symbol": "\ue0b4",
           "background": "transparent",
